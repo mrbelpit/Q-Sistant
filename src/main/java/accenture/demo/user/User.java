@@ -1,4 +1,4 @@
-package accenture.demo.entity;
+package accenture.demo.user;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
