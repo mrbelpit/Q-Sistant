@@ -12,8 +12,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 public class CapacityHandlerTest {
 
   @Before
-  public void setup(){
-    CapacityHandler.restartDay();
+  public void setup() {
+    setupCapacityHandler(250, 10);
   }
 
   @Test
@@ -24,9 +24,8 @@ public class CapacityHandlerTest {
 
   @Test
   public void addUser_withElevenUser_expectEqual() {
-    CapacityHandler.setMaxWorkplaceSpace(100);
-    CapacityHandler.setWorkspaceCapacity(10);
-    CapacityHandler.restartDay();
+    setupCapacityHandler(100, 10);
+
     for (int i = 0; i < 11; i++) {
       CapacityHandler.addUser(new User());
     }
@@ -36,9 +35,8 @@ public class CapacityHandlerTest {
 
   @Test
   public void exitUser_WithElevenUser_expectEqual() {
-    CapacityHandler.setMaxWorkplaceSpace(100);
-    CapacityHandler.setWorkspaceCapacity(10);
-    CapacityHandler.restartDay();
+    setupCapacityHandler(100, 10);
+
     User user = new User();
     CapacityHandler.addUser(user);
     for (int i = 0; i < 10; i++) {
@@ -54,7 +52,7 @@ public class CapacityHandlerTest {
   }
 
   @Test
-  public void increaseCapacity_assertEqual(){
+  public void increaseCapacity_assertEqual() {
     CapacityHandler.addUser(new User());
     Assert.assertEquals(1, CapacityHandler.getAllowedUsers().size());
     CapacityHandler.increaseWorkspaceCapacity(15);
@@ -73,5 +71,27 @@ public class CapacityHandlerTest {
 
     Assert.assertEquals(11, CapacityHandler.getAllowedUsers().size());
     Assert.assertEquals(0, CapacityHandler.getUserQueue().size());
+  }
+
+  @Test
+  public void currentPlaceInUserQueue_WithTenUser_expectEqual() {
+    setupCapacityHandler(100, 5);
+
+    for (int i = 0; i < 9; i++) {
+      CapacityHandler.addUser(new User());
+    }
+    User user = new User();
+    CapacityHandler.addUser(user);
+
+    Assert.assertEquals(5, CapacityHandler.getAllowedUsers().size());
+    Assert.assertEquals(5, CapacityHandler.getUserQueue().size());
+    Assert.assertEquals("Your current place in the queue is " + 5,
+        CapacityHandler.currentPlaceInUserQueue(user));
+  }
+
+  private void setupCapacityHandler(Integer maxWorkplaceSpace, Integer workspaceCapacity) {
+    CapacityHandler.setMaxWorkplaceSpace(maxWorkplaceSpace);
+    CapacityHandler.setWorkspaceCapacity(workspaceCapacity);
+    CapacityHandler.restartDay();
   }
 }
