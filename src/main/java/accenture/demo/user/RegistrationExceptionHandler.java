@@ -1,8 +1,8 @@
 package accenture.demo.user;
 
 
+import accenture.demo.exception.registration.EmailAddressIsAlreadyRegisteredException;
 import accenture.demo.registration.RegistrationResponseDTO;
-import accenture.demo.exception.registration.EmailAddressIsAlreadyRegistered;
 import accenture.demo.exception.registration.RequestBodyIsNullException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,8 +37,8 @@ public class RegistrationExceptionHandler {
                     "error", null, message));
   }
 
-  @ExceptionHandler(value = EmailAddressIsAlreadyRegistered.class)
-  public ResponseEntity<?> emailAddressIsAlreadyRegistered(EmailAddressIsAlreadyRegistered ex) {
+  @ExceptionHandler(value = EmailAddressIsAlreadyRegisteredException.class)
+  public ResponseEntity<?> emailAddressIsAlreadyRegistered(EmailAddressIsAlreadyRegisteredException ex) {
     String message = ex.getMessage();
     return ResponseEntity.status(HttpStatus.BAD_REQUEST)
             .body(new RegistrationResponseDTO(null, null, null,

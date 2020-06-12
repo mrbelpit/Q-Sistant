@@ -1,8 +1,7 @@
 package accenture.demo.user;
 
-import accenture.demo.registration.RegistrationRequestDTO;
-import accenture.demo.exception.registration.EmailAddressIsAlreadyRegistered;
 import accenture.demo.exception.registration.RegistrationException;
+import accenture.demo.registration.RegistrationRequestDTO;
 
 public interface UserService {
 
