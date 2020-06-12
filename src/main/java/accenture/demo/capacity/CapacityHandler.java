@@ -51,7 +51,7 @@ public class CapacityHandler {
 
   public static void increaseWorkspaceCapacity(Integer percentage) {
     Double newWorkspaceCapacity = calculateNewWorkspaceCapacity(percentage);
-    if (newWorkspaceCapacity > workspaceCapacity){
+    if (newWorkspaceCapacity > workspaceCapacity) {
       Queue<User> allowedUsersSaved = allowedUsers;
       Queue<User> userQueueSaved = userQueue;
       CapacityHandler.workspaceCapacity = newWorkspaceCapacity;
@@ -69,7 +69,19 @@ public class CapacityHandler {
     return userQueue;
   }
 
-  private static Double calculateNewWorkspaceCapacity(Integer percentage){
+  public static String currentPlaceInUserQueue(User user) {
+    for (int i = 0; i < userQueue.size(); i++) {
+      if (userQueue.toArray()[i] == user) {
+        return "Your current place in the queue is " + (i + 1);
+      }
+    }
+    if (allowedUsers.contains(user)){
+      return "You can enter the building today!";
+    }
+    return "You have not applied place to the office today!";
+  }
+
+  private static Double calculateNewWorkspaceCapacity(Integer percentage) {
     return Double.valueOf(percentage) / 100;
   }
 }
