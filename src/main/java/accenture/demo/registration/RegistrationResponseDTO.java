@@ -17,6 +17,6 @@ public class RegistrationResponseDTO {
   private String firstName;
   private String lastName;
   private String email;
-  private String error;
+  private String status;
   private String message;
 }

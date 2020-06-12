@@ -2,8 +2,8 @@ package accenture.demo.user;
 
 
 import accenture.demo.exception.registration.EmailAddressIsAlreadyRegisteredException;
-import accenture.demo.registration.RegistrationResponseDTO;
 import accenture.demo.exception.registration.RequestBodyIsNullException;
+import accenture.demo.registration.RegistrationResponseDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -19,7 +19,7 @@ public class RegistrationExceptionHandler {
 
 
   @ExceptionHandler(value = MethodArgumentNotValidException.class)
-  public ResponseEntity<?> handleValidationExceptions(MethodArgumentNotValidException e) {
+  public ResponseEntity<?> handleRegistrationFieldValidationExceptions(MethodArgumentNotValidException e) {
     Map<String, String> errors = new HashMap<>();
     e.getBindingResult().getAllErrors().forEach((error) -> {
       String fieldName = ((FieldError) error).getField();
@@ -27,6 +27,7 @@ public class RegistrationExceptionHandler {
       errors.put(fieldName, errorMessage);
     });
     return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+
   }
 
   @ExceptionHandler(value = RequestBodyIsNullException.class)
@@ -34,14 +35,15 @@ public class RegistrationExceptionHandler {
     String message = ex.getMessage();
     return ResponseEntity.status(HttpStatus.BAD_REQUEST)
             .body(new RegistrationResponseDTO(null, null, null,
-                    "error", null, message));
+                    null, "error", message));
   }
 
   @ExceptionHandler(value = EmailAddressIsAlreadyRegisteredException.class)
-  public ResponseEntity<?> emailAddressIsAlreadyRegistered(EmailAddressIsAlreadyRegisteredException ex) {
+  public ResponseEntity<?> emailAddressIsAlreadyRegistered(
+          EmailAddressIsAlreadyRegisteredException ex) {
     String message = ex.getMessage();
     return ResponseEntity.status(HttpStatus.BAD_REQUEST)
             .body(new RegistrationResponseDTO(null, null, null,
-                    "error", null, message));
+                    null, "error", message));
   }
 }
