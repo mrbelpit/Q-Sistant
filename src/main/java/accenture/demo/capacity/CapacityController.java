@@ -1,5 +1,6 @@
 package accenture.demo.capacity;
 
+import accenture.demo.exception.entry.EntryDeniedException;
 import accenture.demo.user.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,5 +23,11 @@ public class CapacityController {
   public ResponseEntity<?> exitUser(@RequestBody User user) {
     CapacityHandler.exitUser(user);
     return new ResponseEntity<>(new Message("Exit was successful!"), HttpStatus.OK);
+  }
+
+  @GetMapping("/entry")
+  public ResponseEntity<?> enterUser(@RequestBody User user) throws EntryDeniedException {
+    CapacityHandler.checkUserAllowed(user);
+    return new ResponseEntity<>(new Message("Entry was successful!"), HttpStatus.OK);
   }
 }
