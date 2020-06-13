@@ -1,5 +1,6 @@
 package accenture.demo.capacity;
 
+import accenture.demo.exception.entry.EntryDeniedException;
 import accenture.demo.user.User;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -34,6 +35,12 @@ public class CapacityHandler {
     allowedUsers.remove(user);
     User nextUser = userQueue.poll();
     allowedUsers.add(nextUser);
+  }
+
+  public static void checkUserAllowed(User user) throws EntryDeniedException {
+    if (!allowedUsers.contains(user)) {
+      throw new EntryDeniedException("User is currently not allowed to enter!");
+    }
   }
 
   public static void restartDay() {
