@@ -9,11 +9,11 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class CapacityHandler {
 
   private static CapacityHandler instance;
-  private static Integer maxWorkplaceSpace = 250;
-  private static Double workspaceCapacity = 0.1;
-  private static Queue<User> allowedUsers = new LinkedBlockingQueue<>(
+  private Integer maxWorkplaceSpace = 250;
+  private Double workspaceCapacity = 0.1;
+  private Queue<User> allowedUsers = new LinkedBlockingQueue<>(
       (int) (maxWorkplaceSpace * workspaceCapacity));
-  private static Queue<User> userQueue = new LinkedList<>();
+  private Queue<User> userQueue = new LinkedList<>();
 
   private CapacityHandler() {
   }
@@ -25,58 +25,58 @@ public class CapacityHandler {
     return instance;
   }
 
-  public static void addUser(User user) {
+  public void addUser(User user) {
     if (!allowedUsers.offer(user)) {
       userQueue.add(user);
     }
   }
 
-  public static void exitUser(User user) {
+  public void exitUser(User user) {
     allowedUsers.remove(user);
     User nextUser = userQueue.poll();
     allowedUsers.add(nextUser);
   }
 
-  public static void checkUserAllowed(User user) throws EntryDeniedException {
+  public void checkUserAllowed(User user) throws EntryDeniedException {
     if (!allowedUsers.contains(user)) {
       throw new EntryDeniedException("User is currently not allowed to enter!");
     }
   }
 
-  public static void restartDay() {
+  public void restartDay() {
     allowedUsers = new LinkedBlockingQueue<>((int) (maxWorkplaceSpace * workspaceCapacity));
     userQueue = new LinkedList<>();
   }
 
-  public static void setMaxWorkplaceSpace(Integer maxWorkplaceSpace) {
-    CapacityHandler.maxWorkplaceSpace = maxWorkplaceSpace;
+  public void setMaxWorkplaceSpace(Integer maxWorkplaceSpace) {
+    CapacityHandler.getInstance().maxWorkplaceSpace = maxWorkplaceSpace;
   }
 
-  public static void setWorkspaceCapacity(Integer percentage) {
-    CapacityHandler.workspaceCapacity = calculateNewWorkspaceCapacity(percentage);
+  public void setWorkspaceCapacity(Integer percentage) {
+    CapacityHandler.getInstance().workspaceCapacity = calculateNewWorkspaceCapacity(percentage);
   }
 
-  public static void increaseWorkspaceCapacity(Integer percentage) {
+  public void increaseWorkspaceCapacity(Integer percentage) {
     Double newWorkspaceCapacity = calculateNewWorkspaceCapacity(percentage);
     if (newWorkspaceCapacity > workspaceCapacity) {
       Queue<User> allowedUsersSaved = allowedUsers;
       Queue<User> userQueueSaved = userQueue;
-      CapacityHandler.workspaceCapacity = newWorkspaceCapacity;
+      CapacityHandler.getInstance().workspaceCapacity = newWorkspaceCapacity;
       restartDay();
       allowedUsers = allowedUsersSaved;
       userQueue = userQueueSaved;
     }
   }
 
-  public static Queue<User> getAllowedUsers() {
+  public Queue<User> getAllowedUsers() {
     return allowedUsers;
   }
 
-  public static Queue<User> getUserQueue() {
+  public Queue<User> getUserQueue() {
     return userQueue;
   }
 
-  public static String currentPlaceInUserQueue(User user) {
+  public String currentPlaceInUserQueue(User user) {
     for (int i = 0; i < userQueue.size(); i++) {
       if (userQueue.toArray()[i] == user) {
         return "Your current place in the queue is " + (i + 1);
@@ -88,7 +88,7 @@ public class CapacityHandler {
     return "You have not applied place to the office today!";
   }
 
-  private static Double calculateNewWorkspaceCapacity(Integer percentage) {
+  private Double calculateNewWorkspaceCapacity(Integer percentage) {
     return Double.valueOf(percentage) / 100;
   }
 }
