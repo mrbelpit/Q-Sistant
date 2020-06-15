@@ -1,19 +1,28 @@
 package accenture.demo.user;
 
 
+import accenture.demo.exception.RequestBodyIsNullException;
+import accenture.demo.exception.registration.RegistrationException;
 import accenture.demo.login.LoginRequestDTO;
 import accenture.demo.registration.RegistrationRequestDTO;
 import accenture.demo.security.CustomUserDetailService;
 import accenture.demo.security.JwtUtility;
 import accenture.demo.user.exceptionhandling.RegistrationExceptionHandler;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
