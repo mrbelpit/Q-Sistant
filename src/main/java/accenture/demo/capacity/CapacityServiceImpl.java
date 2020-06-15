@@ -22,7 +22,7 @@ public class CapacityServiceImpl implements CapacityService {
     if (CapacityHandler.getInstance().getAllowedUsers().contains(user)) {
       return new Message("You can enter the office today!");
     }
-    return new Message("You have not applied place to the office today!");
+    return new Message("You have not applied to enter the office today!");
   }
 
   @Override
