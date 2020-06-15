@@ -61,11 +61,6 @@ public class UserServiceImpl implements UserService {
     return true;
   }
 
-  @Override
-  public AppUser getUserByEmail(String email) {
-    return userRepository.findByEmail(email).orElse(null);
-  }
-
   private void checkIfLoginRequestDTOisNull(LoginRequestDTO loginRequestDTO)
           throws RequestBodyIsNullException {
     if (loginRequestDTO == null) {
@@ -99,5 +94,10 @@ public class UserServiceImpl implements UserService {
             appUserToValidate.getPassword())) {
       throw new WrongPasswordException("Wrong password!");
     }
+  }
+
+  @Override
+  public AppUser getUserByEmail(String email) {
+    return userRepository.findByEmail(email).orElse(null);
   }
 }

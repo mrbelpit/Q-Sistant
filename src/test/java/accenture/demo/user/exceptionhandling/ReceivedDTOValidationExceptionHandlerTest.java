@@ -2,7 +2,7 @@ package accenture.demo.user.exceptionhandling;
 
 
 import accenture.demo.exception.RequestBodyIsNullException;
-import accenture.demo.exception.registration.EmailAddressIsAlreadyRegisteredException;
+import accenture.demo.login.LoginRequestDTO;
 import accenture.demo.registration.RegistrationRequestDTO;
 import accenture.demo.security.CustomUserDetailService;
 import accenture.demo.security.JwtUtility;
@@ -19,12 +19,12 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import javax.swing.*;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -80,9 +80,11 @@ public class ReceivedDTOValidationExceptionHandlerTest {
   }
 
   @Test
-  public void missingParameterInRegistrationRequestDTO() throws Exception {
+  public void signUp_missingParameterInRegistrationRequestDTO() throws Exception {
     RegistrationRequestDTO testDTO = new RegistrationRequestDTO(null,
             "lastName", "email", "pw");
+    Map<String, String> errorMessage =  new HashMap<>();
+    errorMessage.put("firstName", "First name missing");
 
     MvcResult result = mockMvc.perform(post("/register")
             .contentType(contentType)
@@ -91,7 +93,43 @@ public class ReceivedDTOValidationExceptionHandlerTest {
             .andDo(print())
             .andReturn();
 
-    String expectedErrorMessage = "{\"firstName\": \"First name missing\"}";
+    String expectedErrorMessage = objectMapper.writeValueAsString(errorMessage);
+    String actualResponseBody = result.getResponse().getContentAsString();
+    assertThat(expectedErrorMessage)
+            .isEqualToIgnoringWhitespace((CharSequence) actualResponseBody);
+  }
+
+  @Test
+  public void loginFail_requestBodyWithNullContentSentByUser() throws Exception {
+    LoginRequestDTO testDTO = new LoginRequestDTO("nulldto",
+            "pw");
+    RequestBodyIsNullException ex =
+            new RequestBodyIsNullException(
+                    "Please fill in the required fields");
+    when(userService.validateLoginCredentials(any())).thenThrow(ex);
+    mockMvc.perform(post("/login")
+            .contentType(contentType)
+            .content(objectMapper.writeValueAsString(testDTO)))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("status", is("error")))
+            .andExpect(jsonPath("message", is(ex.getMessage())))
+            .andDo(print());
+  }
+
+  @Test
+  public void loginFail_missingParameterInRegistrationRequestDTO() throws Exception {
+    LoginRequestDTO testDTO = new LoginRequestDTO(null, "pw");
+    Map<String, String> errorMessage =  new HashMap<>();
+    errorMessage.put("email", "Email address is missing");
+
+    MvcResult result = mockMvc.perform(post("/login")
+            .contentType(contentType)
+            .content(objectMapper.writeValueAsString(testDTO)))
+            .andExpect(status().isBadRequest())
+            .andDo(print())
+            .andReturn();
+
+    String expectedErrorMessage = objectMapper.writeValueAsString(errorMessage);
     String actualResponseBody = result.getResponse().getContentAsString();
     assertThat(expectedErrorMessage)
             .isEqualToIgnoringWhitespace((CharSequence) actualResponseBody);
