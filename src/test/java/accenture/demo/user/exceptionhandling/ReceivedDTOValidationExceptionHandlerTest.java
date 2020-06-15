@@ -1,6 +1,7 @@
 package accenture.demo.user.exceptionhandling;
 
 
+import accenture.demo.configuration.AppTestConfig;
 import accenture.demo.exception.RequestBodyIsNullException;
 import accenture.demo.login.LoginRequestDTO;
 import accenture.demo.registration.RegistrationRequestDTO;
@@ -12,7 +13,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -32,13 +35,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-
+@Import(AppTestConfig.class)
 @RunWith(SpringRunner.class)
 public class ReceivedDTOValidationExceptionHandlerTest {
 
   private MockMvc mockMvc;
 
-  ObjectMapper objectMapper = new ObjectMapper();
+  @Autowired
+  ObjectMapper objectMapper;
+
+  @Autowired
+  private MediaType contentType;
 
   @MockBean
   private UserService userService;
@@ -46,11 +53,6 @@ public class ReceivedDTOValidationExceptionHandlerTest {
   private CustomUserDetailService userDetailsService;
   @MockBean
   private JwtUtility jwtTokenUtil;
-
-  private MediaType contentType = new MediaType(MediaType.APPLICATION_JSON.getType(),
-          MediaType.APPLICATION_JSON.getSubtype(),
-          StandardCharsets.UTF_8);
-
 
   @Before
   public void setup() {
