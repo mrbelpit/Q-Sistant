@@ -5,18 +5,21 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import accenture.demo.login.LoginRequestDTO;
 import accenture.demo.registration.RegistrationRequestDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
+public class AppUser {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,7 +30,12 @@ public class User {
   private String password;
   private String cardId;
 
-  public User(RegistrationRequestDTO regRequestDTO){
+  public AppUser(LoginRequestDTO loginRequestDTO){
+    this.email = loginRequestDTO.getEmail();
+    this.password = loginRequestDTO.getPassword();
+  }
+
+  public AppUser(RegistrationRequestDTO regRequestDTO){
     this.firstName = regRequestDTO.getFirstName();
     this.lastName = regRequestDTO.getLastName();
     this.email = regRequestDTO.getEmail();

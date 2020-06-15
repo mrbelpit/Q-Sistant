@@ -1,7 +1,7 @@
 package accenture.demo.unit.capacity;
 
 import accenture.demo.capacity.CapacityHandler;
-import accenture.demo.user.User;
+import accenture.demo.user.AppUser;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,8 +18,9 @@ public class CapacityHandlerTest {
 
   @Test
   public void addUser_expectEqual() {
-    CapacityHandler.getInstance().addUser(new User());
+    CapacityHandler.getInstance().addUser(new AppUser());
     Assert.assertEquals(1, CapacityHandler.getInstance().getAllowedUsers().size());
+
   }
 
   @Test
@@ -27,20 +28,22 @@ public class CapacityHandlerTest {
     setupCapacityHandler(100, 10);
 
     for (int i = 0; i < 11; i++) {
-      CapacityHandler.getInstance().addUser(new User());
+
+      CapacityHandler.getInstance().addUser(new AppUser());
     }
     Assert.assertEquals(10, CapacityHandler.getInstance().getAllowedUsers().size());
     Assert.assertEquals(1, CapacityHandler.getInstance().getUserQueue().size());
+
   }
 
   @Test
   public void exitUser_WithElevenUser_expectEqual() {
     setupCapacityHandler(100, 10);
 
-    User user = new User();
+    AppUser user = new AppUser();
     CapacityHandler.getInstance().addUser(user);
     for (int i = 0; i < 10; i++) {
-      CapacityHandler.getInstance().addUser(new User());
+      CapacityHandler.getInstance().addUser(new AppUser());
     }
     Assert.assertEquals(10, CapacityHandler.getInstance().getAllowedUsers().size());
     Assert.assertEquals(1, CapacityHandler.getInstance().getUserQueue().size());
@@ -49,11 +52,12 @@ public class CapacityHandlerTest {
 
     Assert.assertEquals(10, CapacityHandler.getInstance().getAllowedUsers().size());
     Assert.assertEquals(0, CapacityHandler.getInstance().getUserQueue().size());
+
   }
 
   @Test
   public void increaseCapacity_assertEqual() {
-    CapacityHandler.getInstance().addUser(new User());
+    CapacityHandler.getInstance().addUser(new AppUser());
     Assert.assertEquals(1, CapacityHandler.getInstance().getAllowedUsers().size());
     CapacityHandler.getInstance().increaseWorkspaceCapacity(15);
     Assert.assertEquals(1, CapacityHandler.getInstance().getAllowedUsers().size());
@@ -66,7 +70,7 @@ public class CapacityHandlerTest {
     CapacityHandler.getInstance().setWorkspaceCapacity(5);
 
     for (int i = 0; i < 11; i++) {
-      CapacityHandler.getInstance().addUser(new User());
+      CapacityHandler.getInstance().addUser(new AppUser());
     }
 
     Assert.assertEquals(11, CapacityHandler.getInstance().getAllowedUsers().size());
@@ -78,9 +82,9 @@ public class CapacityHandlerTest {
     setupCapacityHandler(100, 5);
 
     for (int i = 0; i < 9; i++) {
-      CapacityHandler.getInstance().addUser(new User());
+      CapacityHandler.getInstance().addUser(new AppUser());
     }
-    User user = new User();
+    AppUser user = new AppUser();
     CapacityHandler.getInstance().addUser(user);
 
     Assert.assertEquals(5, CapacityHandler.getInstance().getAllowedUsers().size());

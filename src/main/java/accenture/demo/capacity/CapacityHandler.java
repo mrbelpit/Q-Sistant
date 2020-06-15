@@ -1,7 +1,7 @@
 package accenture.demo.capacity;
 
 import accenture.demo.exception.entry.EntryDeniedException;
-import accenture.demo.user.User;
+import accenture.demo.user.AppUser;
 import org.springframework.scheduling.annotation.Scheduled;
 
 import java.util.LinkedList;
@@ -13,9 +13,10 @@ public class CapacityHandler {
   private static CapacityHandler instance;
   private Integer maxWorkplaceSpace = 250;
   private Double workspaceCapacity = 0.1;
-  private Queue<User> allowedUsers = new LinkedBlockingQueue<>(
+  private Queue<AppUser> allowedUsers = new LinkedBlockingQueue<>(
       (int) (maxWorkplaceSpace * workspaceCapacity));
-  private Queue<User> userQueue = new LinkedList<>();
+  private Queue<AppUser> userQueue = new LinkedList<>();
+
 
   private CapacityHandler() {
   }
@@ -27,19 +28,19 @@ public class CapacityHandler {
     return instance;
   }
 
-  public void addUser(User user) {
+  public void addUser(AppUser user) {
     if (!allowedUsers.offer(user)) {
       userQueue.add(user);
     }
   }
 
-  public void exitUser(User user) {
+  public void exitUser(AppUser user) {
     allowedUsers.remove(user);
-    User nextUser = userQueue.poll();
+    AppUser nextUser = userQueue.poll();
     allowedUsers.add(nextUser);
   }
 
-  public void checkUserAllowed(User user) throws EntryDeniedException {
+  public void checkUserAllowed(AppUser user) throws EntryDeniedException {
     if (!allowedUsers.contains(user)) {
       throw new EntryDeniedException("User is currently not allowed to enter!");
     }
@@ -62,8 +63,8 @@ public class CapacityHandler {
   public void increaseWorkspaceCapacity(Integer percentage) {
     Double newWorkspaceCapacity = calculateNewWorkspaceCapacity(percentage);
     if (newWorkspaceCapacity > workspaceCapacity) {
-      Queue<User> allowedUsersSaved = allowedUsers;
-      Queue<User> userQueueSaved = userQueue;
+      Queue<AppUser> allowedUsersSaved = allowedUsers;
+      Queue<AppUser> userQueueSaved = userQueue;
       CapacityHandler.getInstance().workspaceCapacity = newWorkspaceCapacity;
       restartDay();
       allowedUsers = allowedUsersSaved;
@@ -71,15 +72,15 @@ public class CapacityHandler {
     }
   }
 
-  public Queue<User> getAllowedUsers() {
+  public Queue<AppUser> getAllowedUsers() {
     return allowedUsers;
   }
 
-  public Queue<User> getUserQueue() {
+  public Queue<AppUser> getUserQueue() {
     return userQueue;
   }
 
-  public String currentPlaceInUserQueue(User user) {
+  public String currentPlaceInUserQueue(AppUser user) {
     for (int i = 0; i < userQueue.size(); i++) {
       if (userQueue.toArray()[i] == user) {
         return "Your current place in the queue is " + (i + 1);
