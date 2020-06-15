@@ -1,22 +1,21 @@
 package accenture.demo.capacity;
 
-import accenture.demo.exception.entry.EntryDeniedException;
 import accenture.demo.user.AppUser;
-import org.springframework.scheduling.annotation.Scheduled;
-
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
+import org.springframework.scheduling.annotation.Scheduled;
 
 public class CapacityHandler {
 
   private static CapacityHandler instance;
   private Integer maxWorkplaceSpace = 250;
   private Double workspaceCapacity = 0.1;
-  private Queue<AppUser> allowedUsers = new LinkedBlockingQueue<>(
+  private LinkedBlockingQueue<AppUser> allowedUsers = new LinkedBlockingQueue<>(
       (int) (maxWorkplaceSpace * workspaceCapacity));
   private Queue<AppUser> userQueue = new LinkedList<>();
-
+  private ArrayList<AppUser> usersCurrentlyInOffice = new ArrayList<>();
 
   private CapacityHandler() {
   }
@@ -28,22 +27,33 @@ public class CapacityHandler {
     return instance;
   }
 
-  public void addUser(AppUser user) {
+  public String registerAppUser(AppUser user) {
     if (!allowedUsers.offer(user)) {
       userQueue.add(user);
+      return "Your current place in the queue " + userQueue.size()
+          + "!";
+    }
+    return "You can enter the office!";
+  }
+
+  public boolean enterUser(AppUser user) {
+    if (allowedUsers.contains(user)) {
+      usersCurrentlyInOffice.add(user);
+      return true;
+    } else if (allowedUsers.offer(user)) {
+      usersCurrentlyInOffice.add(user);
+      return true;
+    } else {
+      userQueue.add(user);
+      return false;
     }
   }
 
   public void exitUser(AppUser user) {
     allowedUsers.remove(user);
+    usersCurrentlyInOffice.remove(user);
     AppUser nextUser = userQueue.poll();
     allowedUsers.add(nextUser);
-  }
-
-  public void checkUserAllowed(AppUser user) throws EntryDeniedException {
-    if (!allowedUsers.contains(user)) {
-      throw new EntryDeniedException("User is currently not allowed to enter!");
-    }
   }
 
   @Scheduled(cron = "0 0 0 * * ?")
@@ -60,19 +70,24 @@ public class CapacityHandler {
     CapacityHandler.getInstance().workspaceCapacity = calculateNewWorkspaceCapacity(percentage);
   }
 
+  public void setUsersCurrentlyInOffice(ArrayList<AppUser> usersCurrentlyInOffice) {
+    this.usersCurrentlyInOffice = usersCurrentlyInOffice;
+  }
+
   public void increaseWorkspaceCapacity(Integer percentage) {
     Double newWorkspaceCapacity = calculateNewWorkspaceCapacity(percentage);
     if (newWorkspaceCapacity > workspaceCapacity) {
+
       Queue<AppUser> allowedUsersSaved = allowedUsers;
       Queue<AppUser> userQueueSaved = userQueue;
       CapacityHandler.getInstance().workspaceCapacity = newWorkspaceCapacity;
       restartDay();
-      allowedUsers = allowedUsersSaved;
+      allowedUsers.addAll(allowedUsersSaved);
       userQueue = userQueueSaved;
     }
   }
 
-  public Queue<AppUser> getAllowedUsers() {
+  public LinkedBlockingQueue<AppUser> getAllowedUsers() {
     return allowedUsers;
   }
 
@@ -80,16 +95,16 @@ public class CapacityHandler {
     return userQueue;
   }
 
-  public String currentPlaceInUserQueue(AppUser user) {
-    for (int i = 0; i < userQueue.size(); i++) {
-      if (userQueue.toArray()[i] == user) {
-        return "Your current place in the queue is " + (i + 1);
-      }
-    }
-    if (allowedUsers.contains(user)){
-      return "You can enter the building today!";
-    }
-    return "You have not applied place to the office today!";
+  public Integer getMaxWorkplaceSpace() {
+    return maxWorkplaceSpace;
+  }
+
+  public Double getWorkspaceCapacity() {
+    return workspaceCapacity;
+  }
+
+  public ArrayList<AppUser> getUsersCurrentlyInOffice() {
+    return usersCurrentlyInOffice;
   }
 
   private Double calculateNewWorkspaceCapacity(Integer percentage) {
