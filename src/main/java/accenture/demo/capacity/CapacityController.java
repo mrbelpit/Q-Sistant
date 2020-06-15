@@ -15,19 +15,19 @@ public class CapacityController {
 
   @GetMapping("/status")
   public ResponseEntity<?> currentStatus(@RequestBody User user) {
-    return new ResponseEntity<>(new Message(CapacityHandler.currentPlaceInUserQueue(user)),
+    return new ResponseEntity<>(new Message(CapacityHandler.getInstance().currentPlaceInUserQueue(user)),
         HttpStatus.OK);
   }
 
   @DeleteMapping("/exit")
   public ResponseEntity<?> exitUser(@RequestBody User user) {
-    CapacityHandler.exitUser(user);
+    CapacityHandler.getInstance().exitUser(user);
     return new ResponseEntity<>(new Message("Exit was successful!"), HttpStatus.OK);
   }
 
   @GetMapping("/entry")
   public ResponseEntity<?> enterUser(@RequestBody User user) throws EntryDeniedException {
-    CapacityHandler.checkUserAllowed(user);
+    CapacityHandler.getInstance().checkUserAllowed(user);
     return new ResponseEntity<>(new Message("Entry was successful!"), HttpStatus.OK);
   }
 }
