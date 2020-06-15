@@ -2,6 +2,8 @@ package accenture.demo.capacity;
 
 import accenture.demo.exception.entry.EntryDeniedException;
 import accenture.demo.user.User;
+import org.springframework.scheduling.annotation.Scheduled;
+
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -43,6 +45,7 @@ public class CapacityHandler {
     }
   }
 
+  @Scheduled(cron = "0 0 0 * * ?")
   public void restartDay() {
     allowedUsers = new LinkedBlockingQueue<>((int) (maxWorkplaceSpace * workspaceCapacity));
     userQueue = new LinkedList<>();
