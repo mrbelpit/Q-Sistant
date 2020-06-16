@@ -29,17 +29,4 @@ public class AppUser {
   private String email;
   private String password;
   private String cardId;
-
-  public AppUser(LoginRequestDTO loginRequestDTO){
-    this.email = loginRequestDTO.getEmail();
-    this.password = loginRequestDTO.getPassword();
-  }
-
-  public AppUser(RegistrationRequestDTO regRequestDTO){
-    this.firstName = regRequestDTO.getFirstName();
-    this.lastName = regRequestDTO.getLastName();
-    this.email = regRequestDTO.getEmail();
-    this.password = regRequestDTO.getPassword();
-  }
-
 }

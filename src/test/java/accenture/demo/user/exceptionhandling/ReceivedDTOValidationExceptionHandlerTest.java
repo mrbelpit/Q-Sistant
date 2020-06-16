@@ -13,6 +13,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
@@ -53,11 +54,13 @@ public class ReceivedDTOValidationExceptionHandlerTest {
   private CustomUserDetailService userDetailsService;
   @MockBean
   private JwtUtility jwtTokenUtil;
+  @MockBean
+  private ModelMapper modelMapper;
 
   @Before
   public void setup() {
     this.mockMvc = MockMvcBuilders.standaloneSetup(
-            new UserController(userService, userDetailsService, jwtTokenUtil))
+            new UserController(userService, userDetailsService, jwtTokenUtil, modelMapper))
             .setControllerAdvice(new ReceivedDTOValidationExceptionHandler())
             .build();
   }

@@ -1,8 +1,6 @@
 package accenture.demo.unit.capacity;
 
 import accenture.demo.capacity.CapacityHandler;
-import accenture.demo.exception.capacity.CapacitySetupException;
-import accenture.demo.exception.entry.EntryDeniedException;
 import accenture.demo.user.AppUser;
 import java.util.ArrayList;
 import org.junit.Assert;
