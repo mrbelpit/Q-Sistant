@@ -28,5 +28,11 @@ public class AppUser {
   private String lastName;
   private String email;
   private String password;
-  private String cardId;
+  private String cardId = String.valueOf(id);
+
+  public AppUser(LoginRequestDTO loginRequestDTO){
+    this.email = loginRequestDTO.getEmail();
+    this.password = loginRequestDTO.getPassword();
+  }
+
 }
