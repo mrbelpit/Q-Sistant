@@ -27,3 +27,6 @@ for "WORKPLACE_SPACE" values are the number of person, who can be present, by de
 for "WORKPLACE_CAPACITY" values can be between 0 and 100, it is a percentage of the 250 person max, changing it this way will result in an immediate chenge is numger of people allowed in the office.
 
 
+Java class diagram: QSistant.png
+
+
