@@ -51,7 +51,7 @@ public class UserControllerIntegrationTest {
                 .webAppContextSetup(context)
                 .apply(springSecurity())
                 .build();
-        ramboRegistrationRequestDTO = new RegistrationRequestDTO("John", "Bambo", "johnbambo@jungle.man", "asd");
+        ramboRegistrationRequestDTO = new RegistrationRequestDTO("John", "Bambo", "johnbambo@jungle.man", "asd", "1");
     }
 
     @Test
