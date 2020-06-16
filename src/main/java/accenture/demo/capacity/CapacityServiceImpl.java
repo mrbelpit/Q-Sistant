@@ -1,15 +1,25 @@
 package accenture.demo.capacity;
 
+import accenture.demo.exception.appuser.CardIdNotExistException;
 import accenture.demo.exception.capacity.CapacitySetupException;
 import accenture.demo.exception.capacity.InvalidCapacitySetupModifierException;
 import accenture.demo.exception.capacity.InvalidCapacitySetupValueException;
 import accenture.demo.exception.entry.EntryDeniedException;
 import accenture.demo.user.AppUser;
+import accenture.demo.user.UserService;
 import java.util.Queue;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class CapacityServiceImpl implements CapacityService {
+
+  private UserService userService;
+
+  @Autowired
+  public CapacityServiceImpl(UserService userService) {
+    this.userService = userService;
+  }
 
   @Override
   public Message currentStatus(AppUser user) {
@@ -26,16 +36,20 @@ public class CapacityServiceImpl implements CapacityService {
   }
 
   @Override
-  public Message exitUser(AppUser user) {
+  public Message exitUser(String cardId) throws CardIdNotExistException {
+    AppUser user = userService.findByCardId(cardId);
+    checkCardId(user);
     CapacityHandler.getInstance().exitUser(user);
     return new Message("Exit was successful!");
   }
 
   @Override
-  public Message enterUser(AppUser user) throws EntryDeniedException {
-    if (CapacityHandler.getInstance().enterUser(user)){
+  public Message enterUser(String cardId) throws EntryDeniedException, CardIdNotExistException {
+    AppUser user = userService.findByCardId(cardId);
+    checkCardId(user);
+    if (CapacityHandler.getInstance().enterUser(user)) {
       return new Message("Entry was successful!");
-    }else {
+    } else {
       throw new EntryDeniedException("User is currently not allowed to enter!");
     }
   }
@@ -74,7 +88,8 @@ public class CapacityServiceImpl implements CapacityService {
   public CapacityInfoDTO generalInfo() {
     CapacityHandler capacityHandler = CapacityHandler.getInstance();
     return new CapacityInfoDTO(capacityHandler.getMaxWorkplaceSpace(), percentageChanger(),
-        capacityHandler.getAllowedUsers().size(), capacityHandler.getUsersCurrentlyInOffice().size(),
+        capacityHandler.getAllowedUsers().size(),
+        capacityHandler.getUsersCurrentlyInOffice().size(),
         capacityHandler.getAllowedUsers().remainingCapacity(),
         capacityHandler.getUsersCurrentlyInOffice());
   }
@@ -110,5 +125,11 @@ public class CapacityServiceImpl implements CapacityService {
 
   private Integer percentageChanger() {
     return (int) (CapacityHandler.getInstance().getWorkspaceCapacity() * 100);
+  }
+
+  private void checkCardId(AppUser user) throws CardIdNotExistException {
+    if (user== null){
+      throw new CardIdNotExistException("Te provided card ID is not valid!");
+    }
   }
 }
