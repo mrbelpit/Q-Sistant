@@ -1,4 +1,4 @@
-package accenture.demo.user;
+package accenture.demo.unit.user;
 
 
 import static org.hamcrest.Matchers.is;
@@ -16,6 +16,9 @@ import accenture.demo.registration.RegistrationRequestDTO;
 import accenture.demo.registration.RegistrationResponseDTO;
 import accenture.demo.security.CustomUserDetailService;
 import accenture.demo.security.JwtUtility;
+import accenture.demo.user.AppUser;
+import accenture.demo.user.UserController;
+import accenture.demo.user.UserService;
 import accenture.demo.user.exceptionhandling.RegistrationExceptionHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
@@ -28,6 +31,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 @Import(AppTestConfig.class)
 @RunWith(SpringRunner.class)
@@ -52,7 +56,7 @@ public class AppUserControllerUnitTest {
 
   @Before
   public void setup() {
-    this.mockMvc = standaloneSetup(
+    this.mockMvc = MockMvcBuilders.standaloneSetup(
         new UserController(userService, userDetailsService, jwtTokenUtil, modelMapper))
         .setControllerAdvice(new RegistrationExceptionHandler())
         .build();
@@ -61,7 +65,7 @@ public class AppUserControllerUnitTest {
   @Test
   public void registerNewUser_success() throws Exception {
     RegistrationRequestDTO testDTO = new RegistrationRequestDTO(
-        "Lajos", "The Mighty", "lajos@themightiest.com", "pw");
+        "Lajos", "The Mighty", "lajos@themightiest.com", "pw","1");
     AppUser testAppUser = new AppUser(1L, "Lajos", "The Mighty", "lajos@themightiest.com", "pw",
         "1");
     RegistrationResponseDTO registrationResponseDTO = new RegistrationResponseDTO(1L, "Lajos",

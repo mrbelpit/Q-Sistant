@@ -53,7 +53,9 @@ public class CapacityHandler {
     allowedUsers.remove(user);
     usersCurrentlyInOffice.remove(user);
     AppUser nextUser = userQueue.poll();
-    allowedUsers.add(nextUser);
+    if (nextUser != null) {
+      allowedUsers.add(nextUser);
+    }
   }
 
   @Scheduled(cron = "0 0 0 * * ?")

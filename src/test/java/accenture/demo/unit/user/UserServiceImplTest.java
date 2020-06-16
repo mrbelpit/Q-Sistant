@@ -1,4 +1,4 @@
-package accenture.demo.user;
+package accenture.demo.unit.user;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -12,6 +12,10 @@ import accenture.demo.exception.registration.EmailAddressIsAlreadyRegisteredExce
 import accenture.demo.exception.registration.RegistrationException;
 import accenture.demo.login.LoginRequestDTO;
 import accenture.demo.registration.RegistrationRequestDTO;
+import accenture.demo.user.AppUser;
+import accenture.demo.user.UserRepository;
+import accenture.demo.user.UserService;
+import accenture.demo.user.UserServiceImpl;
 import java.util.Optional;
 import org.junit.Before;
 import org.junit.Rule;
@@ -42,7 +46,7 @@ public class UserServiceImplTest {
 
   private RegistrationRequestDTO regRequestDTO =
       new RegistrationRequestDTO("John", "Doe", "jd@email.com",
-          "pw");
+          "pw", "1");
 
   @Rule
   public ExpectedException thrown = ExpectedException.none();

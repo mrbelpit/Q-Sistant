@@ -21,4 +21,6 @@ public class RegistrationRequestDTO {
   private String email;
   @NotBlank(message = "Password missing")
   private String password;
+  @NotBlank(message = "Card ID missing")
+  public String cardId;
 }

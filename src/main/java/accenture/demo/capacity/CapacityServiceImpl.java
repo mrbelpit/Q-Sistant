@@ -87,8 +87,11 @@ public class CapacityServiceImpl implements CapacityService {
   @Override
   public CapacityInfoDTO generalInfo() {
     CapacityHandler capacityHandler = CapacityHandler.getInstance();
-    return new CapacityInfoDTO(capacityHandler.getMaxWorkplaceSpace(), percentageChanger(),
-        capacityHandler.getAllowedUsers().size(),
+    Integer maxWorkerAllowedToEnter = (int) (capacityHandler.getMaxWorkplaceSpace() * capacityHandler.getWorkspaceCapacity());
+    return new CapacityInfoDTO(
+        capacityHandler.getMaxWorkplaceSpace(),
+        percentageChanger(),
+        maxWorkerAllowedToEnter,
         capacityHandler.getUsersCurrentlyInOffice().size(),
         capacityHandler.getAllowedUsers().remainingCapacity(),
         capacityHandler.getUsersCurrentlyInOffice());
@@ -128,8 +131,8 @@ public class CapacityServiceImpl implements CapacityService {
   }
 
   private void checkCardId(AppUser user) throws CardIdNotExistException {
-    if (user== null){
-      throw new CardIdNotExistException("Te provided card ID is not valid!");
+    if (user == null){
+      throw new CardIdNotExistException("The provided card ID is not valid!");
     }
   }
 }

@@ -6,12 +6,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 import accenture.demo.login.LoginRequestDTO;
-import accenture.demo.registration.RegistrationRequestDTO;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.Transient;
 
 @Entity
 @Getter
@@ -28,7 +28,7 @@ public class AppUser {
   private String lastName;
   private String email;
   private String password;
-  private String cardId = String.valueOf(id);
+  public String cardId;
 
   public AppUser(LoginRequestDTO loginRequestDTO){
     this.email = loginRequestDTO.getEmail();
