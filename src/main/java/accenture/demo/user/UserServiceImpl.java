@@ -103,4 +103,9 @@ public class UserServiceImpl implements UserService {
   public AppUser getUserByEmail(String email) {
     return userRepository.findByEmail(email).orElse(null);
   }
+
+  @Override
+  public AppUser findByCardId(String cardId) {
+    return userRepository.findByCardId(cardId).orElse(null);
+  }
 }
