@@ -9,6 +9,7 @@ import accenture.demo.registration.RegistrationRequestDTO;
 import accenture.demo.registration.RegistrationResponseDTO;
 import accenture.demo.security.CustomUserDetailService;
 import accenture.demo.security.JwtUtility;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,13 +25,15 @@ public class UserController {
   private UserService userService;
   private CustomUserDetailService userDetailsService;
   private JwtUtility jwtTokenUtil;
+  private ModelMapper modelMapper;
 
   @Autowired
   public UserController(UserService userService, CustomUserDetailService userDetailsService,
-                        JwtUtility jwtTokenUtil) {
+                        JwtUtility jwtTokenUtil, ModelMapper modelMapper) {
     this.userService = userService;
     this.userDetailsService = userDetailsService;
     this.jwtTokenUtil = jwtTokenUtil;
+    this.modelMapper = modelMapper;
   }
 
   @PostMapping(value = "/register")
@@ -38,11 +41,7 @@ public class UserController {
           @Valid @RequestBody(required = false) RegistrationRequestDTO registrationRequestDTO)
           throws RegistrationException, RequestBodyIsNullException {
     AppUser newAppUser = userService.createNewUser(registrationRequestDTO);
-    return ResponseEntity.status(HttpStatus.OK)
-            .body(new RegistrationResponseDTO(newAppUser.getId(), newAppUser.getFirstName(),
-                    newAppUser.getLastName()
-                    , newAppUser.getEmail(),
-                    null, null));
+    return new ResponseEntity<>(modelMapper.map(newAppUser, RegistrationResponseDTO.class),HttpStatus.OK);
   }
 
   @PostMapping(value = "/login")

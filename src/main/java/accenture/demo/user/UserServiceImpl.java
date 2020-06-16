@@ -8,6 +8,7 @@ import accenture.demo.exception.registration.EmailAddressIsAlreadyRegisteredExce
 import accenture.demo.exception.registration.RegistrationException;
 import accenture.demo.login.LoginRequestDTO;
 import accenture.demo.registration.RegistrationRequestDTO;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,10 +16,12 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl implements UserService {
 
   private UserRepository userRepository;
+  private ModelMapper modelMapper;
 
   @Autowired
-  public UserServiceImpl(UserRepository userRepository) {
+  public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper) {
     this.userRepository = userRepository;
+    this.modelMapper = modelMapper;
   }
 
   @Override
@@ -26,7 +29,7 @@ public class UserServiceImpl implements UserService {
           throws RegistrationException, RequestBodyIsNullException {
     checkIfRegistrationRequestDTOIsNull(regRequestDTO);
     checkIfEmailIsTaken(regRequestDTO);
-    AppUser newAppUser = new AppUser(regRequestDTO);
+    AppUser newAppUser = modelMapper.map(regRequestDTO,AppUser.class);
     return userRepository.save(newAppUser);
   }
 
@@ -53,7 +56,7 @@ public class UserServiceImpl implements UserService {
   public boolean validateLoginCredentials(LoginRequestDTO loginRequestDTO)
           throws LoginException, RequestBodyIsNullException {
     checkIfLoginRequestDTOisNull(loginRequestDTO);
-    AppUser userToValidate = new AppUser(loginRequestDTO);
+    AppUser userToValidate =  modelMapper.map(loginRequestDTO, AppUser.class);
     UserValidationObject userValidationObject =
             validateIfEmailIsRegisteredForAUser(loginRequestDTO.getEmail());
     AppUser storedAppUser = userValidationObject.getAppUser();
