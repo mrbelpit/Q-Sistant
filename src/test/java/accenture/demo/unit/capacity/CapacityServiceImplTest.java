@@ -63,7 +63,7 @@ public class CapacityServiceImplTest {
 
   @Test
   public void currentStatus_withoutRegisterAppUser_assertsTrue() {
-    String msg = "You have not applied place to the office today!";
+    String msg = "You have not applied to enter the office today!";
     Assert.assertEquals(msg, capacityService.currentStatus(new AppUser()).getMessage());
   }
 
