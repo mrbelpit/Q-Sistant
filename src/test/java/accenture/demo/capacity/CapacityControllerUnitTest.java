@@ -141,8 +141,7 @@ public class CapacityControllerUnitTest {
         mockMvc.perform(get("/office/entry")
                 .contentType(contentType)
                 .content(objectMapper.writeValueAsString(testAppUser)))
-                .andExpect(status().isForbidden())
-                .andReturn();
+                .andExpect(status().isForbidden());
     }
 
     @Test
