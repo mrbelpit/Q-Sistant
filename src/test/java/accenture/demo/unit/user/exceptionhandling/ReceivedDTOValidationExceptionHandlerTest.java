@@ -1,4 +1,4 @@
-package accenture.demo.user.exceptionhandling;
+package accenture.demo.unit.user.exceptionhandling;
 
 
 import accenture.demo.configuration.AppTestConfig;
@@ -9,6 +9,7 @@ import accenture.demo.security.CustomUserDetailService;
 import accenture.demo.security.JwtUtility;
 import accenture.demo.user.UserController;
 import accenture.demo.user.UserService;
+import accenture.demo.user.exceptionhandling.ReceivedDTOValidationExceptionHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
@@ -69,7 +70,7 @@ public class ReceivedDTOValidationExceptionHandlerTest {
   @Test
   public void registerFail_requestBodyWithNullContentSentByUser() throws Exception {
     RegistrationRequestDTO testDTO = new RegistrationRequestDTO("nulldto",
-            "lastName", "email", "pw");
+            "lastName", "email", "pw", "1");
     RequestBodyIsNullException ex =
             new RequestBodyIsNullException(
                     "Please fill in the required fields");
@@ -87,7 +88,7 @@ public class ReceivedDTOValidationExceptionHandlerTest {
   @Test
   public void signUp_missingParameterInRegistrationRequestDTO() throws Exception {
     RegistrationRequestDTO testDTO = new RegistrationRequestDTO(null,
-            "lastName", "email", "pw");
+            "lastName", "email", "pw", "1");
     Map<String, String> errorMessage =  new HashMap<>();
     errorMessage.put("firstName", "First name missing");
 

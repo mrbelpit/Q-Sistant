@@ -1,14 +1,14 @@
-package accenture.demo.user.exceptionhandling;
+package accenture.demo.unit.user.exceptionhandling;
+
 
 import accenture.demo.configuration.AppTestConfig;
-import accenture.demo.exception.login.NoSuchUserException;
-import accenture.demo.exception.login.WrongPasswordException;
-import accenture.demo.login.LoginRequestDTO;
+import accenture.demo.exception.registration.EmailAddressIsAlreadyRegisteredException;
+import accenture.demo.registration.RegistrationRequestDTO;
 import accenture.demo.security.CustomUserDetailService;
 import accenture.demo.security.JwtUtility;
 import accenture.demo.user.UserController;
 import accenture.demo.user.UserService;
-import accenture.demo.user.exceptionhandling.LoginExceptionHandler;
+import accenture.demo.user.exceptionhandling.RegistrationExceptionHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,8 +22,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.nio.charset.StandardCharsets;
-
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -31,12 +29,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 
 @Import(AppTestConfig.class)
 @RunWith(SpringRunner.class)
-public class LoginExceptionHandlerUnitTest {
-
+public class RegistrationExceptionHandlerUnitTest {
 
   private MockMvc mockMvc;
 
@@ -57,36 +53,26 @@ public class LoginExceptionHandlerUnitTest {
 
   @Before
   public void setup() {
-    this.mockMvc = MockMvcBuilders.standaloneSetup(new UserController(userService, userDetailsService, jwtTokenUtil, modelMapper))
-            .setControllerAdvice(new LoginExceptionHandler())
+    this.mockMvc = MockMvcBuilders.standaloneSetup(
+            new UserController(userService, userDetailsService, jwtTokenUtil, modelMapper))
+            .setControllerAdvice(new RegistrationExceptionHandler())
             .build();
   }
 
   @Test
-  public void handleNoSuchUserException() throws Exception {
-    LoginRequestDTO loginRequestDTO = new LoginRequestDTO("GeneralKenobi", "Hello, there");
-    NoSuchUserException e = new NoSuchUserException(
-            "This email address in not registered");
-    when(userService.validateLoginCredentials(any())).thenThrow(e);
-    mockMvc.perform(post("/login")
+  public void emailAlreadyRegistered() throws Exception {
+    RegistrationRequestDTO testDTO = new RegistrationRequestDTO("lajos",
+            "lastName", "email", "pw","1");
+    EmailAddressIsAlreadyRegisteredException ex =
+            new EmailAddressIsAlreadyRegisteredException(
+                    "This email address is already registered");
+    when(userService.createNewUser(any())).thenThrow(ex);
+    mockMvc.perform(post("/register")
             .contentType(contentType)
-            .content(objectMapper.writeValueAsString(loginRequestDTO)))
-            .andExpect(status().isUnauthorized())
+            .content(objectMapper.writeValueAsString(testDTO)))
+            .andExpect(status().isBadRequest())
             .andExpect(jsonPath("status", is("error")))
-            .andExpect(jsonPath("message", is(e.getMessage())))
+            .andExpect(jsonPath("message", is(ex.getMessage())))
             .andDo(print());
-  }
-
-  @Test
-  public void handleWrongPasswordException() throws Exception {
-    LoginRequestDTO user = new LoginRequestDTO("GeneralKenobi", "typo");
-    WrongPasswordException e = new WrongPasswordException(
-            "Wrong password!");
-    when(userService.validateLoginCredentials(any())).thenThrow(e);
-    mockMvc.perform(post("/login")
-            .contentType(contentType)
-            .content(objectMapper.writeValueAsString(user)))
-            .andExpect(status().isUnauthorized())
-            .andExpect(jsonPath("status", is("error")));
   }
 }

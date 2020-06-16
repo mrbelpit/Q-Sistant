@@ -1,4 +1,4 @@
-package accenture.demo.capacity;
+package accenture.demo.unit.capacity;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -9,6 +9,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 
+import accenture.demo.capacity.CapacityController;
+import accenture.demo.capacity.CapacityExceptionHandler;
+import accenture.demo.capacity.CapacityService;
+import accenture.demo.capacity.Message;
 import accenture.demo.configuration.AppTestConfig;
 import accenture.demo.exception.entry.EntryDeniedException;
 import accenture.demo.user.AppUser;
@@ -26,6 +30,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 @Import(AppTestConfig.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
@@ -50,7 +55,7 @@ public class CapacityControllerUnitTest {
 
   @Before
   public void setup() {
-    this.mockMvc = standaloneSetup(
+    this.mockMvc = MockMvcBuilders.standaloneSetup(
         new CapacityController(capacityService, userService))
         .setControllerAdvice(new CapacityExceptionHandler())
         .build();
