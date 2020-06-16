@@ -14,11 +14,18 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @EnableWebSecurity
 public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
-  @Autowired
-  private CustomUserDetailService customUserDetailService;
+
+  private final CustomUserDetailService customUserDetailService;
+
+  private final JwtRequestFilter jwtRequestFilter;
 
   @Autowired
-  private JwtRequestFilter jwtRequestFilter;
+  public SecurityConfigurer(
+          CustomUserDetailService customUserDetailService, JwtRequestFilter jwtRequestFilter) {
+    this.customUserDetailService = customUserDetailService;
+    this.jwtRequestFilter = jwtRequestFilter;
+  }
+
 
   @Override
   protected void configure(AuthenticationManagerBuilder auth)
@@ -31,7 +38,14 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
     http.csrf()
             .disable()
             .authorizeRequests()
-            .antMatchers("/", "/login", "/register","/office/entry/**", "/office/entry**","/office/exit**","/office/exit/**","/office/entry/","/office/exit/")
+            .antMatchers("/", "/login", "/register",
+                    "/office/entry/**", "/office/entry**",
+                    "/office/exit**","/office/exit/**",
+                    "/office/entry/","/office/exit/",
+                    "/swagger-resources/**",
+                    "/swagger-ui.html",
+                    "/v2/api-docs",
+                    "/webjars/**")
             .permitAll()
             .anyRequest()
             .authenticated()
