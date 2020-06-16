@@ -1,5 +1,6 @@
 package accenture.demo.capacity;
 
+import accenture.demo.exception.appuser.CardIdNotExistException;
 import accenture.demo.exception.capacity.CapacitySetupException;
 import accenture.demo.exception.capacity.InvalidCapacitySetupModifierException;
 import accenture.demo.exception.capacity.InvalidCapacitySetupValueException;
@@ -32,5 +33,11 @@ public class CapacityExceptionHandler {
   public ResponseEntity<?> handleInvalidCapacitySetupValueException(
       InvalidCapacitySetupValueException exception) {
     return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
+  }
+
+  @ExceptionHandler(value = CardIdNotExistException.class)
+  public ResponseEntity<?> handleCardIdNotExistException(
+      CardIdNotExistException exception) {
+    return new ResponseEntity<>(exception.getMessage(), HttpStatus.OK);
   }
 }

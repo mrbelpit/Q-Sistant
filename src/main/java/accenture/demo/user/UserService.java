@@ -9,11 +9,13 @@ import accenture.demo.registration.RegistrationRequestDTO;
 public interface UserService {
 
   AppUser createNewUser(RegistrationRequestDTO regRequestDTO)
-          throws RegistrationException, RequestBodyIsNullException;
+      throws RegistrationException, RequestBodyIsNullException;
 
   boolean validateLoginCredentials(LoginRequestDTO loginRequestDTO)
-          throws LoginException, RequestBodyIsNullException;
+      throws LoginException, RequestBodyIsNullException;
 
   AppUser getUserByEmail(String email);
+
+  AppUser findByCardId(String cardId);
 
 }
