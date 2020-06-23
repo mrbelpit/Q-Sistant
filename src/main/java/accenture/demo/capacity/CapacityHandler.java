@@ -1,6 +1,7 @@
 package accenture.demo.capacity;
 
 import accenture.demo.user.AppUser;
+import accenture.demo.user.UserRole;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -37,7 +38,10 @@ public class CapacityHandler {
   }
 
   public boolean enterUser(AppUser user) {
-    if (allowedUsers.contains(user)) {
+    if (user.getUserRole() == UserRole.VIP) {
+      usersCurrentlyInOffice.add(user);
+      return true;
+    } else if (allowedUsers.contains(user)) {
       usersCurrentlyInOffice.add(user);
       return true;
     } else if (allowedUsers.offer(user)) {

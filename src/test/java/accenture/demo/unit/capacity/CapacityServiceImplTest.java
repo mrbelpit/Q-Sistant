@@ -14,6 +14,7 @@ import accenture.demo.exception.capacity.InvalidCapacitySetupModifierException;
 import accenture.demo.exception.capacity.InvalidCapacitySetupValueException;
 import accenture.demo.exception.entry.EntryDeniedException;
 import accenture.demo.user.AppUser;
+import accenture.demo.user.UserRole;
 import accenture.demo.user.UserService;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -28,14 +29,17 @@ import org.springframework.test.context.junit4.SpringRunner;
 public class CapacityServiceImplTest {
 
   private CapacityServiceImpl capacityService;
+
   @Mock
   private UserService userService;
 
+  AppUser appUser;
   @Before
   public void setup() {
     capacityService = new CapacityServiceImpl(userService);
     setupCapacityHandler(10, 10);
     CapacityHandler.getInstance().setUsersCurrentlyInOffice(new ArrayList<>());
+    appUser = new AppUser(1L, "asd", "asd", "asd", "asd", null, UserRole.EMPLOYEE);
   }
 
   @Test
@@ -176,7 +180,7 @@ public class CapacityServiceImplTest {
   public void enterUser_withNoPlaceInOffice_assertsEntryDeniedException()
       throws EntryDeniedException, CardIdNotExistException {
     String cardId = "cardId";
-    AppUser appUser = new AppUser(1L, "asd", "asd", "asd", "asd", cardId);
+    appUser.setCardId(cardId);
     when(userService.findByCardId(cardId)).thenReturn(appUser);
     createAppUsers(1);
     capacityService.enterUser(cardId);
@@ -186,7 +190,7 @@ public class CapacityServiceImplTest {
   public void enterUser_withRegisteredPlaceInOffice_assertsEqual()
       throws EntryDeniedException, CardIdNotExistException {
     String cardId = "cardId";
-    AppUser appUser = new AppUser(1L, "asd", "asd", "asd", "asd", cardId);
+    appUser.setCardId(cardId);
     when(userService.findByCardId(cardId)).thenReturn(appUser);
     capacityService.register(appUser);
     Assert.assertEquals("Entry was successful!", capacityService.enterUser(cardId).getMessage());
@@ -196,7 +200,7 @@ public class CapacityServiceImplTest {
   public void enterUser_withNoRegistration_assertsEqual()
       throws EntryDeniedException, CardIdNotExistException {
     String cardId = "cardId";
-    AppUser appUser = new AppUser(1L, "asd", "asd", "asd", "asd", cardId);
+    appUser.setCardId(cardId);
     when(userService.findByCardId(cardId)).thenReturn(appUser);
     Assert.assertEquals("Entry was successful!",
         capacityService.enterUser(cardId).getMessage());
@@ -205,9 +209,9 @@ public class CapacityServiceImplTest {
   @Test
   public void exitUser_withRegister_assertsEqual() throws CardIdNotExistException {
     String cardId = "cardId";
-    AppUser user = new AppUser(1L, "asd", "asd", "asd", "asd", cardId);
-    when(userService.findByCardId(cardId)).thenReturn(user);
-    capacityService.register(user);
+    appUser.setCardId(cardId);
+    when(userService.findByCardId(cardId)).thenReturn(appUser);
+    capacityService.register(appUser);
     createAppUsers(1);
     CapacityHandler capacityHandler = CapacityHandler.getInstance();
 
@@ -222,7 +226,7 @@ public class CapacityServiceImplTest {
   public void exitUser_withEnterUser_assertsEqual()
       throws EntryDeniedException, CardIdNotExistException {
     String cardId = "cardId";
-    AppUser appUser = new AppUser(1L, "asd", "asd", "asd", "asd", cardId);
+    appUser.setCardId(cardId);
     when(userService.findByCardId(cardId)).thenReturn(appUser);
     capacityService.enterUser(cardId);
     createAppUsers(1);
@@ -238,8 +242,8 @@ public class CapacityServiceImplTest {
   @Test
   public void generalInfo_assertsEqual() throws EntryDeniedException, CardIdNotExistException {
     String cardId = "cardId";
-    AppUser appUser01 = new AppUser(1L, "asd", "asd", "asd", "asd", cardId);
-    when(userService.findByCardId(cardId)).thenReturn(appUser01);
+    appUser.setCardId(cardId);
+    when(userService.findByCardId(cardId)).thenReturn(appUser);
     capacityService.enterUser(cardId);
     capacityService.register(new AppUser());
     CapacityInfoDTO capacityInfoDTO = capacityService.generalInfo();
@@ -248,7 +252,7 @@ public class CapacityServiceImplTest {
     Assert.assertEquals((Integer) 1, capacityInfoDTO.getMaxWorkerAllowedToEnter());
     Assert.assertEquals((Integer) 1, capacityInfoDTO.getWorkersCurrentlyInOffice());
     Assert.assertEquals((Integer) 0, capacityInfoDTO.getFreeSpace());
-    Assert.assertEquals(new ArrayList<>(Collections.singletonList(appUser01)),
+    Assert.assertEquals(new ArrayList<>(Collections.singletonList(appUser)),
         capacityInfoDTO.getWorkersInTheBuilding());
   }
 
