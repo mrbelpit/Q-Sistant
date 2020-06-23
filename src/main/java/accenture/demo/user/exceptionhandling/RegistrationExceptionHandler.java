@@ -17,6 +17,6 @@ public class RegistrationExceptionHandler {
     String message = ex.getMessage();
     return ResponseEntity.status(HttpStatus.BAD_REQUEST)
             .body(new RegistrationResponseDTO(null, null, null,
-                    null, "error", message));
+                    null, "error", message, "asd"));
   }
 }

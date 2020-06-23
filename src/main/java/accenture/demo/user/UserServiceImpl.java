@@ -26,25 +26,24 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public AppUser createNewUser(RegistrationRequestDTO regRequestDTO)
-          throws RegistrationException, RequestBodyIsNullException {
+      throws RegistrationException, RequestBodyIsNullException {
     checkIfRegistrationRequestDTOIsNull(regRequestDTO);
     checkIfEmailIsTaken(regRequestDTO);
-    AppUser newAppUser = modelMapper.map(regRequestDTO,AppUser.class);
-    return userRepository.save(newAppUser);
+    return userRepository.save(new AppUser(regRequestDTO, UserRole.EMPLOYEE));
   }
 
   private void checkIfRegistrationRequestDTOIsNull(RegistrationRequestDTO regRequestDTO)
-          throws RequestBodyIsNullException {
+      throws RequestBodyIsNullException {
     if (regRequestDTO == null) {
       throw new RequestBodyIsNullException("Please fill in the required fields");
     }
   }
 
   private void checkIfEmailIsTaken(RegistrationRequestDTO regRequestDTO)
-          throws EmailAddressIsAlreadyRegisteredException {
+      throws EmailAddressIsAlreadyRegisteredException {
     if (checkIfUserExists(regRequestDTO.getEmail())) {
       throw new EmailAddressIsAlreadyRegisteredException(
-              "This email address is already registered");
+          "This email address is already registered");
     }
   }
 
@@ -54,47 +53,47 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public boolean validateLoginCredentials(LoginRequestDTO loginRequestDTO)
-          throws LoginException, RequestBodyIsNullException {
+      throws LoginException, RequestBodyIsNullException {
     checkIfLoginRequestDTOisNull(loginRequestDTO);
-    AppUser userToValidate =  modelMapper.map(loginRequestDTO, AppUser.class);
+    AppUser userToValidate = modelMapper.map(loginRequestDTO, AppUser.class);
     UserValidationObject userValidationObject =
-            validateIfEmailIsRegisteredForAUser(loginRequestDTO.getEmail());
+        validateIfEmailIsRegisteredForAUser(loginRequestDTO.getEmail());
     AppUser storedAppUser = userValidationObject.getAppUser();
     checkEnteredPassword(storedAppUser, userToValidate);
     return true;
   }
 
   private void checkIfLoginRequestDTOisNull(LoginRequestDTO loginRequestDTO)
-          throws RequestBodyIsNullException {
+      throws RequestBodyIsNullException {
     if (loginRequestDTO == null) {
       throw new RequestBodyIsNullException(
-              "Please fill in the required fields");
+          "Please fill in the required fields");
     }
   }
 
   private UserValidationObject validateIfEmailIsRegisteredForAUser(String email)
-          throws NoSuchUserException {
+      throws NoSuchUserException {
     UserValidationObject userValidationObject =
-            new UserValidationObject(getUserByEmail(email));
+        new UserValidationObject(getUserByEmail(email));
     checkIfUserIsValid(userValidationObject);
     return userValidationObject;
   }
 
   private void checkIfUserIsValid(UserValidationObject userValidationObject)
-          throws NoSuchUserException {
+      throws NoSuchUserException {
     if (userValidationObject.getAppUser() != null) {
       userValidationObject.setValid(true);
     } else {
       throw new NoSuchUserException(
-              "This email address in not registered");
+          "This email address in not registered");
     }
   }
 
   private void checkEnteredPassword(AppUser storedAppUser,
-                                    AppUser appUserToValidate)
-          throws WrongPasswordException {
+      AppUser appUserToValidate)
+      throws WrongPasswordException {
     if (!storedAppUser.getPassword().equals(
-            appUserToValidate.getPassword())) {
+        appUserToValidate.getPassword())) {
       throw new WrongPasswordException("Wrong password!");
     }
   }

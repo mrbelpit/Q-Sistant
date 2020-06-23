@@ -3,52 +3,90 @@
   <ID>JAVA</ID>
   <OriginalElement />
   <nodes>
-    <node x="0.0" y="745.0">accenture.demo.user.AppUser</node>
-    <node x="0.0" y="449.0">accenture.demo.security.SecurityConstants</node>
-    <node x="0.0" y="523.0">accenture.demo.capacity.CapacityModifier</node>
-    <node x="0.0" y="79.0">accenture.demo.capacity.CapacityServiceImpl</node>
-    <node x="423.0" y="449.0">accenture.demo.login.LoginResponseDTO</node>
-    <node x="0.0" y="597.0">accenture.demo.capacity.CapacityInfoDTO</node>
-    <node x="208.0" y="523.0">accenture.demo.capacity.CapacitySetupDTO</node>
-    <node x="386.0" y="671.0">accenture.demo.security.JwtUtility</node>
-    <node x="400.0" y="597.0">accenture.demo.user.UserController</node>
-    <node x="243.0" y="0.0">accenture.demo.user.UserService</node>
-    <node x="0.0" y="671.0">accenture.demo.user.UserRepository</node>
-    <node x="551.0" y="671.0">accenture.demo.configuration.AppConfig</node>
-    <node x="509.0" y="227.0">accenture.demo.registration.RegistrationRequestDTO</node>
-    <node x="488.0" y="301.0">accenture.demo.user.UserValidationObject</node>
-    <node x="0.0" y="301.0">accenture.demo.user.exceptionhandling.LoginExceptionHandler</node>
-    <node x="14.5" y="0.0">accenture.demo.capacity.CapacityService</node>
-    <node x="236.0" y="375.0">accenture.demo.security.SecurityConfigurer</node>
-    <node x="193.0" y="671.0">accenture.demo.exception.login.LoginException</node>
-    <node x="244.0" y="301.0">accenture.demo.exception.registration.RegistrationException</node>
-    <node x="143.0" y="745.0">accenture.demo.capacity.Message</node>
-    <node x="258.0" y="227.0">accenture.demo.exception.capacity.CapacitySetupException</node>
-    <node x="416.0" y="523.0">accenture.demo.login.LoginRequestDTO</node>
-    <node x="0.0" y="153.0">accenture.demo.capacity.CapacityExceptionHandler</node>
-    <node x="265.0" y="153.0">accenture.demo.security.CustomUserDetailService</node>
-    <node x="429.0" y="0.0">accenture.demo.user.exceptionhandling.RegistrationExceptionHandler</node>
-    <node x="215.0" y="449.0">accenture.demo.security.JwtRequestFilter</node>
-    <node x="0.0" y="227.0">accenture.demo.registration.RegistrationResponseDTO</node>
-    <node x="458.0" y="375.0">accenture.demo.capacity.CapacityController</node>
-    <node x="200.0" y="597.0">accenture.demo.capacity.CapacityHandler</node>
-    <node x="229.0" y="79.0">accenture.demo.user.UserServiceImpl</node>
-    <node x="0.0" y="375.0">accenture.demo.exception.entry.EntryDeniedException</node>
+    <node x="358.0" y="829.0">accenture.demo.user.AppUser</node>
+    <node x="0.0" y="681.0">accenture.demo.security.SecurityConstants</node>
+    <node x="312.0" y="232.0">accenture.demo.exception.capacity.InvalidCapacitySetupModifierException</node>
+    <node x="215.0" y="681.0">accenture.demo.capacity.CapacityModifier</node>
+    <node x="380.0" y="385.0">accenture.demo.capacity.CapacityServiceImpl</node>
+    <node x="208.0" y="755.0">accenture.demo.capacity.CapacityInfoDTO</node>
+    <node x="631.0" y="681.0">accenture.demo.login.LoginResponseDTO</node>
+    <node x="0.0" y="79.0">accenture.demo.exception.login.WrongPasswordException</node>
+    <node x="226.0" y="79.0">accenture.demo.exception.login.MissingParameterException</node>
+    <node x="423.0" y="681.0">accenture.demo.capacity.CapacitySetupDTO</node>
+    <node x="193.0" y="829.0">accenture.demo.security.JwtUtility</node>
+    <node x="808.0" y="755.0">accenture.demo.user.UserController</node>
+    <node x="623.0" y="306.0">accenture.demo.user.UserService</node>
+    <node x="0.0" y="829.0">accenture.demo.user.UserRepository</node>
+    <node x="516.0" y="533.0">accenture.demo.registration.RegistrationRequestDTO</node>
+    <node x="767.0" y="533.0">accenture.demo.user.exceptionhandling.LoginExceptionHandler</node>
+    <node x="394.5" y="306.0">accenture.demo.capacity.CapacityService</node>
+    <node x="0.0" y="607.0">accenture.demo.user.UserValidationObject</node>
+    <node x="0.0" y="385.0">accenture.demo.exception.registration.EmailAddressIsAlreadyRegisteredException</node>
+    <node x="472.0" y="607.0">accenture.demo.security.SecurityConfigurer</node>
+    <node x="265.5" y="0.0">accenture.demo.exception.login.LoginException</node>
+    <node x="258.0" y="533.0">accenture.demo.exception.appuser.CardIdNotExistException</node>
+    <node x="501.0" y="829.0">accenture.demo.capacity.Message</node>
+    <node x="68.0" y="306.0">accenture.demo.exception.registration.RegistrationException</node>
+    <node x="204.5" y="153.0">accenture.demo.exception.capacity.CapacitySetupException</node>
+    <node x="294.0" y="459.0">accenture.demo.capacity.CapacityExceptionHandler</node>
+    <node x="408.0" y="755.0">accenture.demo.login.LoginRequestDTO</node>
+    <node x="559.0" y="459.0">accenture.demo.security.CustomUserDetailService</node>
+    <node x="473.0" y="79.0">accenture.demo.exception.login.NoSuchUserException</node>
+    <node x="0.0" y="459.0">accenture.demo.user.exceptionhandling.RegistrationExceptionHandler</node>
+    <node x="0.0" y="755.0">accenture.demo.security.JwtRequestFilter</node>
+    <node x="0.0" y="533.0">accenture.demo.registration.RegistrationResponseDTO</node>
+    <node x="0.0" y="232.0">accenture.demo.exception.capacity.InvalidCapacitySetupValueException</node>
+    <node x="694.0" y="607.0">accenture.demo.capacity.CapacityController</node>
+    <node x="608.0" y="755.0">accenture.demo.capacity.CapacityHandler</node>
+    <node x="236.0" y="607.0">accenture.demo.exception.entry.EntryDeniedException</node>
+    <node x="609.0" y="385.0">accenture.demo.user.UserServiceImpl</node>
   </nodes>
   <notes />
   <edges>
+    <edge source="accenture.demo.exception.capacity.InvalidCapacitySetupModifierException" target="accenture.demo.exception.capacity.CapacitySetupException">
+      <point x="0.0" y="-14.5" />
+      <point x="469.0" y="207.0" />
+      <point x="359.0" y="207.0" />
+      <point x="51.5" y="14.5" />
+    </edge>
     <edge source="accenture.demo.capacity.CapacityServiceImpl" target="accenture.demo.capacity.CapacityService">
       <point x="0.0" y="-14.5" />
       <point x="0.0" y="14.5" />
+    </edge>
+    <edge source="accenture.demo.exception.login.WrongPasswordException" target="accenture.demo.exception.login.LoginException">
+      <point x="0.0" y="-14.5" />
+      <point x="103.0" y="54.0" />
+      <point x="290.16666666666663" y="54.0" />
+      <point x="-49.33333333333334" y="14.5" />
+    </edge>
+    <edge source="accenture.demo.exception.capacity.InvalidCapacitySetupValueException" target="accenture.demo.exception.capacity.CapacitySetupException">
+      <point x="0.0" y="-14.5" />
+      <point x="146.0" y="207.0" />
+      <point x="256.0" y="207.0" />
+      <point x="-51.5" y="14.5" />
+    </edge>
+    <edge source="accenture.demo.exception.registration.EmailAddressIsAlreadyRegisteredException" target="accenture.demo.exception.registration.RegistrationException">
+      <point x="0.0" y="-14.5" />
+      <point x="0.0" y="14.5" />
+    </edge>
+    <edge source="accenture.demo.exception.login.NoSuchUserException" target="accenture.demo.exception.login.LoginException">
+      <point x="0.0" y="-14.5" />
+      <point x="565.0" y="54.0" />
+      <point x="388.83333333333337" y="54.0" />
+      <point x="49.33333333333337" y="14.5" />
     </edge>
     <edge source="accenture.demo.user.UserServiceImpl" target="accenture.demo.user.UserService">
       <point x="0.0" y="-14.5" />
       <point x="0.0" y="14.5" />
     </edge>
+    <edge source="accenture.demo.exception.login.MissingParameterException" target="accenture.demo.exception.login.LoginException">
+      <point x="0.0" y="-14.5" />
+      <point x="0.0" y="14.5" />
+    </edge>
   </edges>
-  <settings layout="Hierarchic Group" zoom="0.6000000000000001" x="856.9999999999999" y="288.5714285714285" />
+  <settings layout="Hierarchic Group" zoom="0.6000000000000001" x="715.9999999999999" y="371.99999999999994" />
   <SelectedNodes>
-    <node>accenture.demo.user.exceptionhandling.RegistrationExceptionHandler</node>
+    <node>accenture.demo.exception.capacity.InvalidCapacitySetupValueException</node>
   </SelectedNodes>
   <Categories />
   <SCOPE>All</SCOPE>

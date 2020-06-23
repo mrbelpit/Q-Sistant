@@ -2,6 +2,7 @@ package accenture.demo.unit.capacity;
 
 import accenture.demo.capacity.CapacityHandler;
 import accenture.demo.user.AppUser;
+import accenture.demo.user.UserRole;
 import java.util.ArrayList;
 import org.junit.Assert;
 import org.junit.Before;
@@ -94,10 +95,20 @@ public class CapacityHandlerTest {
   public void enterUser_withoutRegistrationAndWithNoFreePlace_assertsEqual() {
     setupCapacityHandler(10, 10);
     CapacityHandler.getInstance().registerAppUser(new AppUser());
-    Assert.assertFalse(CapacityHandler.getInstance().enterUser(new AppUser(1L,"asd","asd","asd","asd","asd")));
+    Assert.assertFalse(CapacityHandler.getInstance()
+        .enterUser(new AppUser(1L, "asd", "asd", "asd", "asd", "asd", UserRole.EMPLOYEE)));
     Assert.assertEquals(1, CapacityHandler.getInstance().getAllowedUsers().size());
     Assert.assertEquals(0, CapacityHandler.getInstance().getUsersCurrentlyInOffice().size());
     Assert.assertEquals(1, CapacityHandler.getInstance().getUserQueue().size());
+  }
+
+  @Test
+  public void enterUserVIP_withNoFreePlace_assertsEqual() {
+    Assert.assertTrue(CapacityHandler.getInstance().enterUser(new AppUser()));
+    Assert.assertTrue(CapacityHandler.getInstance()
+        .enterUser(new AppUser(1L, "asd", "asd", "asd", "asd", "asd", UserRole.VIP)));
+    Assert.assertEquals(1, CapacityHandler.getInstance().getAllowedUsers().size());
+    Assert.assertEquals(2, CapacityHandler.getInstance().getUsersCurrentlyInOffice().size());
   }
 
   private void setupCapacityHandler(Integer maxWorkplaceSpace, Integer workspaceCapacity) {

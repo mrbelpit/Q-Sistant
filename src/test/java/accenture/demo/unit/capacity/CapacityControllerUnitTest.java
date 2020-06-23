@@ -16,6 +16,7 @@ import accenture.demo.capacity.Message;
 import accenture.demo.configuration.AppTestConfig;
 import accenture.demo.exception.entry.EntryDeniedException;
 import accenture.demo.user.AppUser;
+import accenture.demo.user.UserRole;
 import accenture.demo.user.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
@@ -60,7 +61,7 @@ public class CapacityControllerUnitTest {
         .setControllerAdvice(new CapacityExceptionHandler())
         .build();
     testAppUser = new AppUser(1L, "Lajos", "The Mighty", "lajos@themightiest.com", "pw",
-        "1");
+        "1", UserRole.EMPLOYEE);
   }
 
   @Test
