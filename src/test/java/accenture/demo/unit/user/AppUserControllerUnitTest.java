@@ -18,6 +18,7 @@ import accenture.demo.security.CustomUserDetailService;
 import accenture.demo.security.JwtUtility;
 import accenture.demo.user.AppUser;
 import accenture.demo.user.UserController;
+import accenture.demo.user.UserRole;
 import accenture.demo.user.UserService;
 import accenture.demo.user.exceptionhandling.RegistrationExceptionHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -67,9 +68,9 @@ public class AppUserControllerUnitTest {
     RegistrationRequestDTO testDTO = new RegistrationRequestDTO(
         "Lajos", "The Mighty", "lajos@themightiest.com", "pw","1");
     AppUser testAppUser = new AppUser(1L, "Lajos", "The Mighty", "lajos@themightiest.com", "pw",
-        "1");
+        "1", UserRole.EMPLOYEE);
     RegistrationResponseDTO registrationResponseDTO = new RegistrationResponseDTO(1L, "Lajos",
-        "The Mighty", "lajos@themightiest.com", null, null);
+        "The Mighty", "lajos@themightiest.com", null, null, "1");
     when(userService.createNewUser(any())).thenReturn(testAppUser);
     when(modelMapper.map(testAppUser, RegistrationResponseDTO.class))
         .thenReturn(registrationResponseDTO);
