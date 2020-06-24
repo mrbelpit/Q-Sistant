@@ -1,5 +1,6 @@
 package accenture.demo.user;
 
+import accenture.demo.admin.SpecialAppUserRegistrationDTO;
 import accenture.demo.exception.RequestBodyIsNullException;
 import accenture.demo.exception.login.LoginException;
 import accenture.demo.exception.login.NoSuchUserException;
@@ -8,6 +9,8 @@ import accenture.demo.exception.registration.EmailAddressIsAlreadyRegisteredExce
 import accenture.demo.exception.registration.RegistrationException;
 import accenture.demo.login.LoginRequestDTO;
 import accenture.demo.registration.RegistrationRequestDTO;
+import java.util.ArrayList;
+import java.util.List;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,6 +35,24 @@ public class UserServiceImpl implements UserService {
     return userRepository.save(new AppUser(regRequestDTO, UserRole.EMPLOYEE));
   }
 
+  @Override
+  public List<AppUser> createNewUsers(List<SpecialAppUserRegistrationDTO> regRequestDTOList)
+      throws RegistrationException, RequestBodyIsNullException {
+    List<AppUser> appUserList = new ArrayList<>();
+    for (SpecialAppUserRegistrationDTO regReqDTO:regRequestDTOList) {
+      appUserList.add(createNewSpecialUser(regReqDTO));
+    }
+    return appUserList;
+  }
+
+  @Override
+  public AppUser createNewSpecialUser(SpecialAppUserRegistrationDTO regRequestDTO)
+      throws RegistrationException, RequestBodyIsNullException {
+    checkIfRegistrationRequestDTOIsNull(regRequestDTO);
+    checkIfEmailIsTaken(regRequestDTO);
+    return userRepository.save(new AppUser(regRequestDTO));
+  }
+
   private void checkIfRegistrationRequestDTOIsNull(RegistrationRequestDTO regRequestDTO)
       throws RequestBodyIsNullException {
     if (regRequestDTO == null) {
@@ -39,7 +60,22 @@ public class UserServiceImpl implements UserService {
     }
   }
 
+  private void checkIfRegistrationRequestDTOIsNull(SpecialAppUserRegistrationDTO regRequestDTO)
+      throws RequestBodyIsNullException {
+    if (regRequestDTO == null) {
+      throw new RequestBodyIsNullException("Please fill in the required fields");
+    }
+  }
+
   private void checkIfEmailIsTaken(RegistrationRequestDTO regRequestDTO)
+      throws EmailAddressIsAlreadyRegisteredException {
+    if (checkIfUserExists(regRequestDTO.getEmail())) {
+      throw new EmailAddressIsAlreadyRegisteredException(
+          "This email address is already registered");
+    }
+  }
+
+  private void checkIfEmailIsTaken(SpecialAppUserRegistrationDTO regRequestDTO)
       throws EmailAddressIsAlreadyRegisteredException {
     if (checkIfUserExists(regRequestDTO.getEmail())) {
       throw new EmailAddressIsAlreadyRegisteredException(

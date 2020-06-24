@@ -9,6 +9,7 @@ import accenture.demo.registration.RegistrationRequestDTO;
 import accenture.demo.registration.RegistrationResponseDTO;
 import accenture.demo.security.CustomUserDetailService;
 import accenture.demo.security.JwtUtility;
+import javax.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,8 +17,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.validation.Valid;
 
 @RestController
 public class UserController {
@@ -29,7 +28,7 @@ public class UserController {
 
   @Autowired
   public UserController(UserService userService, CustomUserDetailService userDetailsService,
-                        JwtUtility jwtTokenUtil, ModelMapper modelMapper) {
+      JwtUtility jwtTokenUtil, ModelMapper modelMapper) {
     this.userService = userService;
     this.userDetailsService = userDetailsService;
     this.jwtTokenUtil = jwtTokenUtil;
@@ -38,23 +37,24 @@ public class UserController {
 
   @PostMapping(value = "/register")
   public ResponseEntity<?> registerNewUser(
-          @Valid @RequestBody(required = false) RegistrationRequestDTO registrationRequestDTO)
-          throws RegistrationException, RequestBodyIsNullException {
+      @Valid @RequestBody(required = false) RegistrationRequestDTO registrationRequestDTO)
+      throws RegistrationException, RequestBodyIsNullException {
     AppUser newAppUser = userService.createNewUser(registrationRequestDTO);
-    return new ResponseEntity<>(modelMapper.map(newAppUser, RegistrationResponseDTO.class),HttpStatus.OK);
+    return new ResponseEntity<>(modelMapper.map(newAppUser, RegistrationResponseDTO.class),
+        HttpStatus.OK);
   }
 
   @PostMapping(value = "/login")
   public ResponseEntity<?> login(
-          @Valid @RequestBody(required = false) LoginRequestDTO loginRequestDTO)
-          throws LoginException, RequestBodyIsNullException {
+      @Valid @RequestBody(required = false) LoginRequestDTO loginRequestDTO)
+      throws LoginException, RequestBodyIsNullException {
     userService.validateLoginCredentials(loginRequestDTO);
     return ResponseEntity
-            .status(HttpStatus.OK)
-            .body(new LoginResponseDTO("ok",
-                    jwtTokenUtil.generateToken(
-                            userDetailsService.loadUserByUsername(
-                                    loginRequestDTO.getEmail())),
-                    null));
+        .status(HttpStatus.OK)
+        .body(new LoginResponseDTO("ok",
+            jwtTokenUtil.generateToken(
+                userDetailsService.loadUserByUsername(
+                    loginRequestDTO.getEmail())),
+            null));
   }
 }
