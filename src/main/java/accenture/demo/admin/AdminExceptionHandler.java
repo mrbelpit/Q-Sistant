@@ -1,5 +1,7 @@
 package accenture.demo.admin;
 
+import accenture.demo.exception.distance.UnitNotSupportedException;
+import accenture.demo.exception.distance.ValueIsNotValidException;
 import accenture.demo.exception.userfilter.UserFilterIsNotValidException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +15,18 @@ public class AdminExceptionHandler {
   @ExceptionHandler(value = UserFilterIsNotValidException.class)
   public ResponseEntity<?> handleUserFilterIsNotValidException(
       UserFilterIsNotValidException exception) {
+    return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
+  }
+
+  @ExceptionHandler(value = UnitNotSupportedException.class)
+  public ResponseEntity<?> handleUnitNotSupportedException(
+      UnitNotSupportedException exception) {
+    return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
+  }
+
+  @ExceptionHandler(value = ValueIsNotValidException.class)
+  public ResponseEntity<?> handleValueIsNotValidException(
+      ValueIsNotValidException exception) {
     return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
   }
 }

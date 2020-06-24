@@ -2,8 +2,11 @@ package accenture.demo.admin;
 
 import accenture.demo.capacity.CapacityService;
 import accenture.demo.capacity.CapacitySetupDTO;
+import accenture.demo.distance.DistanceService;
+import accenture.demo.distance.DistanceSetupDTO;
 import accenture.demo.exception.RequestBodyIsNullException;
 import accenture.demo.exception.capacity.CapacitySetupException;
+import accenture.demo.exception.distance.DistanceException;
 import accenture.demo.exception.login.NoSuchUserException;
 import accenture.demo.exception.registration.RegistrationException;
 import accenture.demo.exception.userfilter.UserFilterIsNotValidException;
@@ -29,11 +32,14 @@ public class AdminController {
 
   private UserService userService;
   private CapacityService capacityService;
+  private DistanceService distanceService;
 
   @Autowired
-  public AdminController(UserService userService, CapacityService capacityService) {
+  public AdminController(UserService userService, CapacityService capacityService,
+      DistanceService distanceService) {
     this.userService = userService;
     this.capacityService = capacityService;
+    this.distanceService = distanceService;
   }
 
   @PostMapping(value = "/user/register")
@@ -73,5 +79,11 @@ public class AdminController {
   public ResponseEntity<?> calibrateCapacity(@RequestBody CapacitySetupDTO capacitySetupDTO)
       throws CapacitySetupException {
     return new ResponseEntity<>(capacityService.capacitySetup(capacitySetupDTO), HttpStatus.OK);
+  }
+
+  @PutMapping("/distance")
+  public ResponseEntity<?> updateDistance(@Valid @RequestBody DistanceSetupDTO distanceSetupDTO)
+      throws DistanceException {
+    return new ResponseEntity<>(distanceService.setDistance(distanceSetupDTO), HttpStatus.OK);
   }
 }
