@@ -8,7 +8,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 
 import accenture.demo.configuration.AppTestConfig;
 import accenture.demo.login.LoginRequestDTO;
@@ -34,14 +33,14 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-@Import(AppTestConfig.class)
 @RunWith(SpringRunner.class)
+@Import(AppTestConfig.class)
 public class AppUserControllerUnitTest {
 
   private MockMvc mockMvc;
 
   @Autowired
-  ObjectMapper objectMapper;
+  private ObjectMapper objectMapper;
 
   @Autowired
   private MediaType contentType;
@@ -66,7 +65,7 @@ public class AppUserControllerUnitTest {
   @Test
   public void registerNewUser_success() throws Exception {
     RegistrationRequestDTO testDTO = new RegistrationRequestDTO(
-        "Lajos", "The Mighty", "lajos@themightiest.com", "pw","1");
+        "Lajos", "The Mighty", "lajos@themightiest.com", "pw", "1");
     AppUser testAppUser = new AppUser(1L, "Lajos", "The Mighty", "lajos@themightiest.com", "pw",
         "1", UserRole.EMPLOYEE);
     RegistrationResponseDTO registrationResponseDTO = new RegistrationResponseDTO(1L, "Lajos",

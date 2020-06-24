@@ -1,5 +1,6 @@
 package accenture.demo.user;
 
+import accenture.demo.admin.SpecialAppUserRegistrationDTO;
 import accenture.demo.login.LoginRequestDTO;
 import accenture.demo.registration.RegistrationRequestDTO;
 import javax.persistence.Entity;
@@ -42,6 +43,13 @@ public class AppUser {
     this.password = registrationRequestDTO.getPassword();
     this.cardId = registrationRequestDTO.getCardId();
     this.userRole = userRole;
-
+  }
+  public AppUser(SpecialAppUserRegistrationDTO specRegRequestDTO) {
+    this.firstName = specRegRequestDTO.getFirstName();
+    this.lastName = specRegRequestDTO.getLastName();
+    this.email = specRegRequestDTO.getEmail();
+    this.password = specRegRequestDTO.getPassword();
+    this.cardId = specRegRequestDTO.getCardId();
+    this.userRole = specRegRequestDTO.getUserRole();
   }
 }

@@ -2,8 +2,8 @@ package accenture.demo.integration.capacity;
 
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -12,12 +12,12 @@ import accenture.demo.capacity.CapacityInfoDTO;
 import accenture.demo.capacity.CapacityModifier;
 import accenture.demo.capacity.CapacitySetupDTO;
 import accenture.demo.capacity.Message;
+import accenture.demo.configuration.AppTestConfig;
 import accenture.demo.login.LoginRequestDTO;
 import accenture.demo.login.LoginResponseDTO;
 import accenture.demo.registration.RegistrationRequestDTO;
 import accenture.demo.registration.RegistrationResponseDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import org.junit.Assert;
 import org.junit.Before;
@@ -25,6 +25,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
@@ -37,6 +38,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@Import(AppTestConfig.class)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 @EnableWebMvc
 public class CapacityControllerIntegrationTest {
@@ -45,10 +47,8 @@ public class CapacityControllerIntegrationTest {
   private String tokenSteve;
   private String tokenBob;
 
-
-  private MediaType mediaType = new MediaType(MediaType.APPLICATION_JSON.getType(),
-      MediaType.APPLICATION_JSON.getSubtype(),
-      StandardCharsets.UTF_8);
+  @Autowired
+  private MediaType mediaType;
 
   @Autowired
   private ObjectMapper objectMapper;
@@ -137,12 +137,12 @@ public class CapacityControllerIntegrationTest {
     CapacityInfoDTO capacityInfoDTO = objectMapper
         .readValue(result.getResponse().getContentAsString(), CapacityInfoDTO.class);
 
-    Assert.assertEquals(Integer.valueOf(1),capacityInfoDTO.getFreeSpace());
-    Assert.assertEquals(0,capacityInfoDTO.getWorkersInTheBuilding().size());
-    Assert.assertEquals(Integer.valueOf(1),capacityInfoDTO.getMaxWorkerAllowedToEnter());
-    Assert.assertEquals(Integer.valueOf(10),capacityInfoDTO.getWorkspaceCapacityPercentage());
-    Assert.assertEquals(Integer.valueOf(10),capacityInfoDTO.getMaxWorkplaceSpace());
-    Assert.assertEquals(Integer.valueOf(0),capacityInfoDTO.getWorkersCurrentlyInOffice());
+    Assert.assertEquals(Integer.valueOf(1), capacityInfoDTO.getFreeSpace());
+    Assert.assertEquals(0, capacityInfoDTO.getWorkersInTheBuilding().size());
+    Assert.assertEquals(Integer.valueOf(1), capacityInfoDTO.getMaxWorkerAllowedToEnter());
+    Assert.assertEquals(Integer.valueOf(10), capacityInfoDTO.getWorkspaceCapacityPercentage());
+    Assert.assertEquals(Integer.valueOf(10), capacityInfoDTO.getMaxWorkplaceSpace());
+    Assert.assertEquals(Integer.valueOf(0), capacityInfoDTO.getWorkersCurrentlyInOffice());
   }
 
   private Message officeRegister(String token) throws Exception {

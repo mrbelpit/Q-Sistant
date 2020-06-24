@@ -1,4 +1,4 @@
-package accenture.demo.integration.capacity;
+package accenture.demo.integration.user;
 
 import accenture.demo.configuration.AppTestConfig;
 import accenture.demo.login.LoginRequestDTO;
