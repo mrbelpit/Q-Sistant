@@ -1,17 +1,18 @@
 package accenture.demo.user;
 
 import accenture.demo.admin.SpecialAppUserRegistrationDTO;
+import accenture.demo.admin.UserFilter;
 import accenture.demo.exception.RequestBodyIsNullException;
 import accenture.demo.exception.login.LoginException;
 import accenture.demo.exception.login.NoSuchUserException;
 import accenture.demo.exception.login.WrongPasswordException;
 import accenture.demo.exception.registration.EmailAddressIsAlreadyRegisteredException;
 import accenture.demo.exception.registration.RegistrationException;
+import accenture.demo.exception.userfilter.UserFilterIsNotValidException;
 import accenture.demo.login.LoginRequestDTO;
 import accenture.demo.registration.RegistrationRequestDTO;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,7 +41,7 @@ public class UserServiceImpl implements UserService {
   public List<AppUser> createNewUsers(List<SpecialAppUserRegistrationDTO> regRequestDTOList)
       throws RegistrationException, RequestBodyIsNullException {
     List<AppUser> appUserList = new ArrayList<>();
-    for (SpecialAppUserRegistrationDTO regReqDTO:regRequestDTOList) {
+    for (SpecialAppUserRegistrationDTO regReqDTO : regRequestDTOList) {
       appUserList.add(createNewSpecialUser(regReqDTO));
     }
     return appUserList;
@@ -153,8 +154,30 @@ public class UserServiceImpl implements UserService {
     return appUser;
   }
 
+  @Override
+  public List<AppUser> findUsers(String userFilter) throws UserFilterIsNotValidException {
+    UserFilter filter;
+    try {
+      filter = UserFilter.valueOf(userFilter.toUpperCase());
+    } catch (IllegalArgumentException e) {
+      throw new UserFilterIsNotValidException("User filter is not valid!");
+    }
+      switch (filter) {
+        case ALL:
+          return (List<AppUser>) userRepository.findAll();
+        case EMPLOYEE:
+          return userRepository.findByUserRole(UserRole.EMPLOYEE);
+        case ADMIN:
+          return userRepository.findByUserRole(UserRole.ADMIN);
+        case VIP:
+          return userRepository.findByUserRole(UserRole.VIP);
+        default:
+          return null;
+      }
+  }
+
   private void checkIfUserExists(AppUser appUser) throws NoSuchUserException {
-    if (appUser == null){
+    if (appUser == null) {
       throw new NoSuchUserException("User does not exist with the provided Id.");
     }
   }

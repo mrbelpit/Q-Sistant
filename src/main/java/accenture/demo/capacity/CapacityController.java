@@ -52,17 +52,6 @@ public class CapacityController {
     return new ResponseEntity<>(capacityService.exitUser(cardId), HttpStatus.OK);
   }
 
-  @PutMapping("/admin/calibrate")
-  public ResponseEntity<?> calibrateCapacity(@RequestBody CapacitySetupDTO capacitySetupDTO)
-      throws CapacitySetupException {
-    return new ResponseEntity<>(capacityService.capacitySetup(capacitySetupDTO), HttpStatus.OK);
-  }
-
-  @GetMapping("/admin/info")
-  public ResponseEntity<?> generalInfo() {
-    return new ResponseEntity<>(capacityService.generalInfo(), HttpStatus.OK);
-  }
-
   private AppUser extractUserFromToken(){
     String appUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
     return userService.getUserByEmail(appUserEmail);
