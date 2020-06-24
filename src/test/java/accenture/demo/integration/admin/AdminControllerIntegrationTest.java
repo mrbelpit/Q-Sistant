@@ -13,6 +13,8 @@ import accenture.demo.capacity.CapacityModifier;
 import accenture.demo.capacity.CapacitySetupDTO;
 import accenture.demo.capacity.Message;
 import accenture.demo.configuration.AppTestConfig;
+import accenture.demo.distance.DistanceSetupDTO;
+import accenture.demo.distance.Unit;
 import accenture.demo.login.LoginRequestDTO;
 import accenture.demo.login.LoginResponseDTO;
 import accenture.demo.registration.RegistrationRequestDTO;
@@ -227,6 +229,19 @@ public class AdminControllerIntegrationTest {
     Assert.assertEquals(Integer.valueOf(10), capacityInfoDTO.getWorkspaceCapacityPercentage());
     Assert.assertEquals(Integer.valueOf(10), capacityInfoDTO.getMaxWorkplaceSpace());
     Assert.assertEquals(Integer.valueOf(0), capacityInfoDTO.getWorkersCurrentlyInOffice());
+  }
+
+  @Test
+  public void adminDistance_expectOK_assertsEqual() throws Exception {
+    MvcResult result = mockMvc.perform(put("/admin/distance")
+        .contentType(mediaType)
+        .header("Authorization", "Bearer " + tokenSmith)
+        .content(objectMapper.writeValueAsString(new DistanceSetupDTO(Unit.METER,3))))
+        .andExpect(status().isOk())
+        .andReturn();
+    Message message = objectMapper.readValue(result.getResponse().getContentAsString(), Message.class);
+    String expectedMsg = "The distance was successfully set to 3 meter. It is valid from tomorrow.";
+    Assert.assertEquals(expectedMsg, message.getMessage());
   }
 
   private String registerLoginAndGetUsersToken(String firstName, String lastName, String email,
