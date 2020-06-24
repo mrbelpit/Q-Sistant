@@ -1,15 +1,15 @@
 # Q-Sistant
 
-###For the project to run, use these environmental variables:
+### For the project to run, use these environmental variables:
 
 
-###For the project to compile you need to assign values to these enviroment variables:
+### For the project to compile you need to assign values to these enviroment variables:
 
-####For the SecurityConstatns class:
--JWT_SECRET (needs 32bit value like)	`Is's secret.`
--TOKEN_PREFIX 							`Bearer`
--TOKEN_HEADER_STRING 					`Authorization`
--JWT_TOKEN_EXPIRATION_TIME 				`3600000`
+#### For the SecurityConstatns class:
+- JWT_SECRET (needs 32bit value like)	`Is's secret.`
+- TOKEN_PREFIX 							`Bearer`
+- TOKEN_HEADER_STRING 					`Authorization`
+- JWT_TOKEN_EXPIRATION_TIME 				`3600000`
 
 
 Setting workspace capacity (/office/admin/calibrate endpoint) can be done in two ways:
