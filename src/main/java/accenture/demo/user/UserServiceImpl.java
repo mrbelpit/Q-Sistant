@@ -11,6 +11,7 @@ import accenture.demo.login.LoginRequestDTO;
 import accenture.demo.registration.RegistrationRequestDTO;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -142,5 +143,19 @@ public class UserServiceImpl implements UserService {
   @Override
   public AppUser findByCardId(String cardId) {
     return userRepository.findByCardId(cardId).orElse(null);
+  }
+
+  @Override
+  public AppUser deleteUser(Long id) throws NoSuchUserException {
+    AppUser appUser = userRepository.findById(id).orElse(null);
+    checkIfUserExists(appUser);
+    userRepository.delete(appUser);
+    return appUser;
+  }
+
+  private void checkIfUserExists(AppUser appUser) throws NoSuchUserException {
+    if (appUser == null){
+      throw new NoSuchUserException("User does not exist with the provided Id.");
+    }
   }
 }
