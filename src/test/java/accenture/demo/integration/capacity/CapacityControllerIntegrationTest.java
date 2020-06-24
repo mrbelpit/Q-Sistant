@@ -59,6 +59,7 @@ public class CapacityControllerIntegrationTest {
   @Before
   public void before() throws Exception {
     CapacityHandler.getInstance().setMaxWorkplaceSpace(10);
+    CapacityHandler.getInstance().setWorkspaceCapacity(10);
     CapacityHandler.getInstance().restartDay();
     CapacityHandler.getInstance().setUsersCurrentlyInOffice(new ArrayList<>());
 
@@ -73,15 +74,23 @@ public class CapacityControllerIntegrationTest {
   }
 
   @Test
-  public void officeRegisterAppUser_expectOK_assertsEqual() throws Exception {
+  public void officeStatusAppUser_expectOK_assertsEqual() throws Exception {
+    System.out.println(CapacityHandler.getInstance().getAllowedUsers().remainingCapacity());
     Assert.assertEquals("You can enter the office!", officeRegister(tokenSteve).getMessage());
+    System.out.println(CapacityHandler.getInstance().getAllowedUsers().remainingCapacity());
+    MvcResult result = mockMvc.perform(post("/office/register")
+        .contentType(mediaType)
+        .header("Authorization", "Bearer " + tokenBob))
+        .andExpect(status().isOk())
+        .andReturn();
+    System.out.println(CapacityHandler.getInstance().getAllowedUsers().remainingCapacity());
+    Message message = objectMapper.readValue(result.getResponse().getContentAsString(), Message.class);
+    Assert.assertEquals("Your current place in the queue 1!", message.getMessage());
   }
 
   @Test
-  public void officeStatusAppUser_expectOK_assertsEqual() throws Exception {
-    officeRegister(tokenSteve);
-    String message = officeRegister(tokenBob).getMessage();
-    Assert.assertEquals("Your current place in the queue 1!", message);
+  public void officeRegisterAppUser_expectOK_assertsEqual() throws Exception {
+    Assert.assertEquals("You can enter the office!", officeRegister(tokenSteve).getMessage());
   }
 
   @Test
@@ -108,43 +117,6 @@ public class CapacityControllerIntegrationTest {
     Assert.assertEquals("Exit was successful!", message.getMessage());
   }
 
-  @Test
-  public void adminCalibrate_expectOK_assertsEqual() throws Exception {
-    Integer percentage = 20;
-    MvcResult result = mockMvc.perform(put("/office/admin/calibrate")
-        .contentType(mediaType)
-        .header("Authorization", "Bearer " + tokenBob)
-        .content(objectMapper
-            .writeValueAsString(
-                new CapacitySetupDTO(CapacityModifier.WORKSPACE_CAPACITY, percentage))))
-        .andExpect(status().isOk())
-        .andReturn();
-
-    Message message = objectMapper
-        .readValue(result.getResponse().getContentAsString(), Message.class);
-    String expectedMsg = "The max workplace capacity successfully set to " + percentage
-        + ". It is valid from now.";
-    Assert.assertEquals(expectedMsg, message.getMessage());
-  }
-
-  @Test
-  public void adminInfo_expectOK_assertsEqual() throws Exception {
-    MvcResult result = mockMvc.perform(get("/office/admin/info")
-        .header("Authorization", "Bearer " + tokenBob))
-        .andExpect(status().isOk())
-        .andReturn();
-
-    CapacityInfoDTO capacityInfoDTO = objectMapper
-        .readValue(result.getResponse().getContentAsString(), CapacityInfoDTO.class);
-
-    Assert.assertEquals(Integer.valueOf(1), capacityInfoDTO.getFreeSpace());
-    Assert.assertEquals(0, capacityInfoDTO.getWorkersInTheBuilding().size());
-    Assert.assertEquals(Integer.valueOf(1), capacityInfoDTO.getMaxWorkerAllowedToEnter());
-    Assert.assertEquals(Integer.valueOf(10), capacityInfoDTO.getWorkspaceCapacityPercentage());
-    Assert.assertEquals(Integer.valueOf(10), capacityInfoDTO.getMaxWorkplaceSpace());
-    Assert.assertEquals(Integer.valueOf(0), capacityInfoDTO.getWorkersCurrentlyInOffice());
-  }
-
   private Message officeRegister(String token) throws Exception {
     MvcResult result = mockMvc.perform(post("/office/register")
         .contentType(mediaType)
@@ -158,15 +130,12 @@ public class CapacityControllerIntegrationTest {
   private String registerLoginAndGetUsersToken(String firstName, String lastName, String email,
       String password, String cardId)
       throws Exception {
-    MvcResult result01 = mockMvc.perform(post("/register")
+    mockMvc.perform(post("/register")
         .contentType(mediaType)
         .content(objectMapper.writeValueAsString(
             new RegistrationRequestDTO(firstName, lastName, email, password, cardId))))
-        .andExpect(status().isOk())
-        .andReturn();
-    System.out.println(objectMapper
-        .readValue(result01.getResponse().getContentAsString(), RegistrationResponseDTO.class)
-        .getId());
+        .andExpect(status().isOk());
+
 
     MvcResult result = mockMvc.perform(post("/login")
         .contentType(mediaType)

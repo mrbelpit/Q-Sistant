@@ -1,11 +1,13 @@
 package accenture.demo.admin;
 
+import accenture.demo.capacity.CapacityService;
+import accenture.demo.capacity.CapacitySetupDTO;
 import accenture.demo.exception.RequestBodyIsNullException;
+import accenture.demo.exception.capacity.CapacitySetupException;
 import accenture.demo.exception.login.NoSuchUserException;
 import accenture.demo.exception.registration.RegistrationException;
-import accenture.demo.registration.RegistrationRequestDTO;
+import accenture.demo.exception.userfilter.UserFilterIsNotValidException;
 import accenture.demo.user.AppUser;
-import accenture.demo.user.UserRole;
 import accenture.demo.user.UserService;
 import java.util.List;
 import javax.validation.Valid;
@@ -14,8 +16,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -24,10 +28,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class AdminController {
 
   private UserService userService;
+  private CapacityService capacityService;
 
   @Autowired
-  public AdminController(UserService userService) {
+  public AdminController(UserService userService, CapacityService capacityService) {
     this.userService = userService;
+    this.capacityService = capacityService;
   }
 
   @PostMapping(value = "/user/register")
@@ -50,5 +56,22 @@ public class AdminController {
   @DeleteMapping(value = "/users/{id}")
   public ResponseEntity<?> deleteUser(@PathVariable Long id) throws NoSuchUserException {
     return new ResponseEntity<>(userService.deleteUser(id), HttpStatus.OK);
+  }
+
+  @GetMapping(value = "/users/{userFilter}")
+  public ResponseEntity<?> findUsers(@PathVariable String userFilter)
+      throws UserFilterIsNotValidException {
+    return new ResponseEntity<>(userService.findUsers(userFilter), HttpStatus.OK);
+  }
+
+  @GetMapping("/info")
+  public ResponseEntity<?> generalInfo() {
+    return new ResponseEntity<>(capacityService.generalInfo(), HttpStatus.OK);
+  }
+
+  @PutMapping("/calibrate/headcount")
+  public ResponseEntity<?> calibrateCapacity(@RequestBody CapacitySetupDTO capacitySetupDTO)
+      throws CapacitySetupException {
+    return new ResponseEntity<>(capacityService.capacitySetup(capacitySetupDTO), HttpStatus.OK);
   }
 }

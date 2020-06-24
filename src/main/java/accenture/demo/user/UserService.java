@@ -5,6 +5,7 @@ import accenture.demo.exception.RequestBodyIsNullException;
 import accenture.demo.exception.login.LoginException;
 import accenture.demo.exception.login.NoSuchUserException;
 import accenture.demo.exception.registration.RegistrationException;
+import accenture.demo.exception.userfilter.UserFilterIsNotValidException;
 import accenture.demo.login.LoginRequestDTO;
 import accenture.demo.registration.RegistrationRequestDTO;
 import java.util.List;
@@ -28,4 +29,7 @@ public interface UserService {
   AppUser findByCardId(String cardId);
 
   AppUser deleteUser(Long id) throws NoSuchUserException;
+
+  List<AppUser> findUsers(String userFilter)
+      throws UserFilterIsNotValidException;
 }
