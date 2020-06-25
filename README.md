@@ -3,6 +3,7 @@
 ### For the project to run, use these environmental variables:
 
 
+<<<<<<< HEAD:README.md
 ### For the project to compile you need to assign values to these enviroment variables:
 
 #### For the SecurityConstatns class:
@@ -10,6 +11,7 @@
 - TOKEN_PREFIX 							`Bearer`
 - TOKEN_HEADER_STRING 					`Authorization`
 - JWT_TOKEN_EXPIRATION_TIME 				`3600000`
+- KAFKA_SERVER_URI                      `127.0.0.1:9092 (default kafka address with default port)`
 
 
 Setting workspace capacity (/office/admin/calibrate endpoint) can be done in two ways:

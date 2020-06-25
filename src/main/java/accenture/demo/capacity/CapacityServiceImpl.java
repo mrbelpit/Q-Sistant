@@ -135,4 +135,8 @@ public class CapacityServiceImpl implements CapacityService {
       throw new CardIdNotExistException("The provided card ID is not valid!");
     }
   }
+
+  public AppUser getNthUserInQueue(int n){
+    return CapacityHandler.getInstance().getNthUserInQueue(n);
+  }
 }

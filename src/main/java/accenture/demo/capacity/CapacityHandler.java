@@ -2,11 +2,12 @@ package accenture.demo.capacity;
 
 import accenture.demo.user.AppUser;
 import accenture.demo.user.UserRole;
+import org.springframework.scheduling.annotation.Scheduled;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
-import org.springframework.scheduling.annotation.Scheduled;
 
 public class CapacityHandler {
 
@@ -14,9 +15,10 @@ public class CapacityHandler {
   private Integer maxWorkplaceSpace = 250;
   private Double workspaceCapacity = 0.1;
   private LinkedBlockingQueue<AppUser> allowedUsers = new LinkedBlockingQueue<>(
-      (int) (maxWorkplaceSpace * workspaceCapacity));
+          (int) (maxWorkplaceSpace * workspaceCapacity));
   private Queue<AppUser> userQueue = new LinkedList<>();
   private ArrayList<AppUser> usersCurrentlyInOffice = new ArrayList<>();
+  private int queuePlaceToSendNotificationTo = 3;
 
   private CapacityHandler() {
   }
@@ -32,7 +34,7 @@ public class CapacityHandler {
     if (!allowedUsers.offer(user)) {
       userQueue.add(user);
       return "Your current place in the queue " + userQueue.size()
-          + "!";
+             + "!";
     }
     return "You can enter the office!";
   }
@@ -115,5 +117,24 @@ public class CapacityHandler {
 
   private Double calculateNewWorkspaceCapacity(Integer percentage) {
     return Double.valueOf(percentage) / 100;
+  }
+
+  public AppUser getNthUserInQueue(int n) {
+    if (userQueue.size() == 0) {
+      return null;
+    }
+    if (0 < n && n <= userQueue.size()) {
+      ArrayList<AppUser> listOfUsersInQueue = new ArrayList(userQueue);
+      return listOfUsersInQueue.get(n - 1);
+    }
+    return null;
+  }
+
+  public int getQueuePlaceToSendNotificationTo() {
+    return queuePlaceToSendNotificationTo;
+  }
+
+  public void setQueuePlaceToSendNotificationTo(int queuePlaceToSendNotificationTo) {
+    this.queuePlaceToSendNotificationTo = queuePlaceToSendNotificationTo;
   }
 }

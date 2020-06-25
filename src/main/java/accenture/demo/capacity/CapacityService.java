@@ -18,4 +18,6 @@ public interface CapacityService {
   CapacityInfoDTO generalInfo();
 
   Message register(AppUser user);
+
+  AppUser getNthUserInQueue(int n);
 }
