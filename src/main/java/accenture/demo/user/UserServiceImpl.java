@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -162,23 +164,31 @@ public class UserServiceImpl implements UserService {
     } catch (IllegalArgumentException e) {
       throw new UserFilterIsNotValidException("User filter is not valid!");
     }
-      switch (filter) {
-        case ALL:
-          return (List<AppUser>) userRepository.findAll();
-        case EMPLOYEE:
-          return userRepository.findByUserRole(UserRole.EMPLOYEE);
-        case ADMIN:
-          return userRepository.findByUserRole(UserRole.ADMIN);
-        case VIP:
-          return userRepository.findByUserRole(UserRole.VIP);
-        default:
-          return null;
-      }
+    switch (filter) {
+      case ALL:
+        return (List<AppUser>) userRepository.findAll();
+      case EMPLOYEE:
+        return userRepository.findByUserRole(UserRole.EMPLOYEE);
+      case ADMIN:
+        return userRepository.findByUserRole(UserRole.ADMIN);
+      case VIP:
+        return userRepository.findByUserRole(UserRole.VIP);
+      default:
+        return null;
+    }
   }
 
   private void checkIfUserExists(AppUser appUser) throws NoSuchUserException {
     if (appUser == null) {
       throw new NoSuchUserException("User does not exist with the provided Id.");
     }
+  }
+
+  @EventListener(ApplicationReadyEvent.class)
+  public void createFirstAdmin() throws RegistrationException, RequestBodyIsNullException {
+    String EMAIL = System.getenv("FIRST_ADMIN_EMAIL");
+    String PASSWORD = System.getenv("FIRST_ADMIN_PASSWORD");
+    createNewSpecialUser(
+        new SpecialAppUserRegistrationDTO("admin", "admin", EMAIL, PASSWORD, "-1", UserRole.ADMIN));
   }
 }

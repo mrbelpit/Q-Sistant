@@ -64,7 +64,7 @@ public class UserControllerIntegrationTest {
                 .andReturn();
         RegistrationResponseDTO resultDTO = objectMapper
                 .readValue(result.getResponse().getContentAsString(), RegistrationResponseDTO.class);
-        assertEquals(Long.valueOf(1L), resultDTO.getId());
+        assertEquals(Long.valueOf(2L), resultDTO.getId());
         assertEquals("johnbambo@jungle.man", resultDTO.getEmail());
     }
 
