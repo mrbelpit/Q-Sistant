@@ -253,7 +253,7 @@ public class CapacityServiceImplTest {
     Assert.assertEquals((Integer) 1, capacityInfoDTO.getWorkersCurrentlyInOffice());
     Assert.assertEquals((Integer) 0, capacityInfoDTO.getFreeSpace());
     Assert.assertEquals(new ArrayList<>(Collections.singletonList(appUser)),
-        capacityInfoDTO.getWorkersInTheBuilding());
+        capacityInfoDTO.getEmployeesInTheBuilding());
   }
 
   @Test(expected = CardIdNotExistException.class)

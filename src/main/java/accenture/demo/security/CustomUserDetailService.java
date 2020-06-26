@@ -3,7 +3,6 @@ package accenture.demo.security;
 import accenture.demo.user.AppUser;
 import accenture.demo.user.UserRepository;
 import accenture.demo.user.UserRole;
-import java.util.Collection;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -36,8 +35,6 @@ public class CustomUserDetailService implements UserDetailsService {
       grantedAuthorities.add(new SimpleGrantedAuthority(ROLE_PREFIX + userRole.toString()));
     }
 
-    return new User(appUser.getEmail(), appUser.getPassword(),
-            grantedAuthorities);
+    return appUser.toCurrentUserDetails();
   }
-
 }

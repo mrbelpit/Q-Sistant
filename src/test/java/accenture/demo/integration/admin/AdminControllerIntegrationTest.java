@@ -88,7 +88,9 @@ public class AdminControllerIntegrationTest {
         .header("Authorization", "Bearer " + tokenFirstAdmin)
         .content(objectMapper
             .writeValueAsString(
-                new SpecialAppUserRegistrationDTO("Tom", "Denem", "asd@gmail.com", "asd", "25",
+                new SpecialAppUserRegistrationDTO("Lajos", "The Mightiest", "asd@gmail.com",
+                        "das",
+                        "25",
                     UserRole.VIP))))
         .andExpect(status().isOk())
         .andReturn();
@@ -229,7 +231,7 @@ public class AdminControllerIntegrationTest {
         .readValue(result.getResponse().getContentAsString(), CapacityInfoDTO.class);
 
     Assert.assertEquals(Integer.valueOf(1), capacityInfoDTO.getFreeSpace());
-    Assert.assertEquals(0, capacityInfoDTO.getWorkersInTheBuilding().size());
+    Assert.assertEquals(0, capacityInfoDTO.getEmployeesInTheBuilding().size());
     Assert.assertEquals(Integer.valueOf(1), capacityInfoDTO.getMaxWorkerAllowedToEnter());
     Assert.assertEquals(Integer.valueOf(10), capacityInfoDTO.getWorkspaceCapacityPercentage());
     Assert.assertEquals(Integer.valueOf(10), capacityInfoDTO.getMaxWorkplaceSpace());
