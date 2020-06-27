@@ -120,5 +120,4 @@ public class UserControllerIntegrationTest {
                         objectMapper.writeValueAsString(request)))
                 .andExpect(status().isUnauthorized());
     }
-
 }

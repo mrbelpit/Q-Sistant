@@ -76,10 +76,8 @@ public class AdminControllerIntegrationTest {
         .webAppContextSetup(context)
         .apply(springSecurity())
         .build();
-/*    userService.createNewSpecialUser(new SpecialAppUserRegistrationDTO("Tom", "Denem", "asd@gmail.com", "asd", "25",
-        UserRole.ADMIN));*/
+
     tokenFirstAdmin = registerLoginAndGetUsersToken("bob@bob.com","bob");
-    //tokenFirstAdmin = registerLoginAndGetUsersToken("asd@gmail.com","asd");
   }
 
   @Test
@@ -145,7 +143,6 @@ public class AdminControllerIntegrationTest {
     String filter = "vip";
 
     MvcResult result = mockMvc.perform(get("/admin/users/" + filter)
-        .contentType(mediaType)
         .header("Authorization", "Bearer " + tokenFirstAdmin))
         .andExpect(status().isOk())
         .andReturn();
@@ -161,7 +158,6 @@ public class AdminControllerIntegrationTest {
     String filter = "all";
 
     MvcResult result = mockMvc.perform(get("/admin/users/" + filter)
-        .contentType(mediaType)
         .header("Authorization", "Bearer " + tokenFirstAdmin))
         .andExpect(status().isOk())
         .andReturn();
@@ -178,7 +174,6 @@ public class AdminControllerIntegrationTest {
     String filter = null;
 
     MvcResult result = mockMvc.perform(get("/admin/users/" + filter)
-        .contentType(mediaType)
         .header("Authorization", "Bearer " + tokenFirstAdmin))
         .andExpect(status().isBadRequest())
         .andReturn();
@@ -193,7 +188,6 @@ public class AdminControllerIntegrationTest {
     String filter = "asdasd";
 
     MvcResult result = mockMvc.perform(get("/admin/users/" + filter)
-        .contentType(mediaType)
         .header("Authorization", "Bearer " + tokenFirstAdmin))
         .andExpect(status().isBadRequest())
         .andReturn();
@@ -284,7 +278,6 @@ public class AdminControllerIntegrationTest {
     String filter = "vip";
 
     MvcResult result0 = mockMvc.perform(get("/admin/users/" + filter)
-        .contentType(mediaType)
         .header("Authorization", "Bearer " + tokenFirstAdmin))
         .andExpect(status().isOk())
         .andReturn();
@@ -307,7 +300,6 @@ public class AdminControllerIntegrationTest {
         .andExpect(status().isOk());
 
     MvcResult result1 = mockMvc.perform(get("/admin/users/" + filter)
-        .contentType(mediaType)
         .header("Authorization", "Bearer " + tokenFirstAdmin))
         .andExpect(status().isOk())
         .andReturn();
@@ -326,7 +318,6 @@ public class AdminControllerIntegrationTest {
     Assert.assertEquals("Lajos",user.getFirstName());
 
     MvcResult result2 = mockMvc.perform(get("/admin/users/" + filter)
-        .contentType(mediaType)
         .header("Authorization", "Bearer " + tokenFirstAdmin))
         .andExpect(status().isOk())
         .andReturn();
