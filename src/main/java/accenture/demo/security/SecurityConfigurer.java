@@ -70,7 +70,7 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
   }
 
 
-    @Override
+  @Override
   @Bean
   public AuthenticationManager authenticationManagerBean()
           throws Exception {

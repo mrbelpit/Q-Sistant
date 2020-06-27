@@ -74,10 +74,9 @@ public class AdminControllerIntegrationTest {
         .webAppContextSetup(context)
         .apply(springSecurity())
         .build();
-/*    userService.createNewSpecialUser(new SpecialAppUserRegistrationDTO("Tom", "Denem", "asd@gmail.com", "asd", "25",
-        UserRole.ADMIN));*/
-    tokenFirstAdmin = registerLoginAndGetUsersToken("bob@bob.com","bob");
-    //tokenFirstAdmin = registerLoginAndGetUsersToken("asd@gmail.com","asd");
+    String EMAIL = System.getenv("FIRST_ADMIN_EMAIL");
+    String PASSWORD = System.getenv("FIRST_ADMIN_PASSWORD");
+    tokenFirstAdmin = registerLoginAndGetUsersToken(EMAIL, PASSWORD);
   }
 
   @Test

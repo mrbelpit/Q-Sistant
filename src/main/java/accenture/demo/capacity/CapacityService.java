@@ -20,4 +20,8 @@ public interface CapacityService {
   Message register(AppUser user);
 
   AppUser getNthUserInQueue(int n);
+
+  byte[] currentLayout();
+
+  byte[] getAssignedStationImage(AppUser user);
 }

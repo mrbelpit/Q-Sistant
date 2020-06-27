@@ -1,22 +1,18 @@
 package accenture.demo.integration.capacity;
 
+import static org.junit.Assert.assertNotEquals;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import accenture.demo.capacity.CapacityHandler;
-import accenture.demo.capacity.CapacityInfoDTO;
-import accenture.demo.capacity.CapacityModifier;
-import accenture.demo.capacity.CapacitySetupDTO;
 import accenture.demo.capacity.Message;
 import accenture.demo.configuration.AppTestConfig;
 import accenture.demo.login.LoginRequestDTO;
 import accenture.demo.login.LoginResponseDTO;
 import accenture.demo.registration.RegistrationRequestDTO;
-import accenture.demo.registration.RegistrationResponseDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
 import org.junit.Assert;
@@ -86,6 +82,15 @@ public class CapacityControllerIntegrationTest {
     System.out.println(CapacityHandler.getInstance().getAllowedUsers().remainingCapacity());
     Message message = objectMapper.readValue(result.getResponse().getContentAsString(), Message.class);
     Assert.assertEquals("Your current place in the queue 1!", message.getMessage());
+    MvcResult imageSteve = mockMvc.perform(get("/office/station")
+            .contentType(mediaType)
+            .header("Authorization", "Bearer " + tokenSteve))
+            .andReturn();
+    MvcResult imageBob = mockMvc.perform(get("/office/station")
+            .contentType(mediaType)
+            .header("Authorization", "Bearer " + tokenBob))
+            .andReturn();
+    assertNotEquals(imageSteve.getResponse().getContentAsString(), imageBob.getResponse().getContentAsString());
   }
 
   @Test

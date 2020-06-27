@@ -7,6 +7,7 @@ import accenture.demo.user.AppUser;
 import accenture.demo.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -41,6 +42,12 @@ public class CapacityController {
   @GetMapping("/status")
   public ResponseEntity<?> currentStatus() {
     return new ResponseEntity<>(capacityService.currentStatus(extractUserFromToken()),
+            HttpStatus.OK);
+  }
+
+  @GetMapping(value = "/station", produces = MediaType.IMAGE_JPEG_VALUE)
+  public ResponseEntity<?> getAssignedStationImage() {
+    return new ResponseEntity<>(capacityService.getAssignedStationImage(extractUserFromToken()),
             HttpStatus.OK);
   }
 

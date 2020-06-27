@@ -139,4 +139,12 @@ public class CapacityServiceImpl implements CapacityService {
   public AppUser getNthUserInQueue(int n){
     return CapacityHandler.getInstance().getNthUserInQueue(n);
   }
+
+  public byte[] currentLayout() {
+    return CapacityHandler.getInstance().getCurrentLayoutImage();
+  }
+
+  public byte[] getAssignedStationImage(AppUser user) {
+    return CapacityHandler.getInstance().getAssignedStationImage(user);
+  }
 }
