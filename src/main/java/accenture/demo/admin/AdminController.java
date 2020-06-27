@@ -2,8 +2,10 @@ package accenture.demo.admin;
 
 import accenture.demo.capacity.CapacityService;
 import accenture.demo.capacity.CapacitySetupDTO;
+import accenture.demo.capacity.QueueNotificationSetupDTO;
 import accenture.demo.distance.DistanceService;
 import accenture.demo.distance.DistanceSetupDTO;
+import accenture.demo.exception.QueueNotificationNumberNotValidException;
 import accenture.demo.exception.RequestBodyIsNullException;
 import accenture.demo.exception.capacity.CapacitySetupException;
 import accenture.demo.exception.distance.DistanceException;
@@ -81,9 +83,17 @@ public class AdminController {
     return new ResponseEntity<>(capacityService.capacitySetup(capacitySetupDTO), HttpStatus.OK);
   }
 
-  @PutMapping("/distance")
-  public ResponseEntity<?> updateDistance(@Valid @RequestBody DistanceSetupDTO distanceSetupDTO)
+  @PutMapping("/calibrate/distance")
+  public ResponseEntity<?> updateDistance(@RequestBody DistanceSetupDTO distanceSetupDTO)
       throws DistanceException {
     return new ResponseEntity<>(distanceService.setDistance(distanceSetupDTO), HttpStatus.OK);
+  }
+
+  @PutMapping("/calibrate/notification")
+  public ResponseEntity<?> updateQueueNotificationNumber(
+      @RequestBody QueueNotificationSetupDTO queueNotificationSetupDTO)
+      throws QueueNotificationNumberNotValidException {
+    return new ResponseEntity<>(
+        capacityService.setNumberToSendNotification(queueNotificationSetupDTO), HttpStatus.OK);
   }
 }

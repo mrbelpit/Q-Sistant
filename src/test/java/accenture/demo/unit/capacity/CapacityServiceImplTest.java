@@ -8,6 +8,8 @@ import accenture.demo.capacity.CapacityModifier;
 import accenture.demo.capacity.CapacityServiceImpl;
 import accenture.demo.capacity.CapacitySetupDTO;
 import accenture.demo.capacity.Message;
+import accenture.demo.capacity.QueueNotificationSetupDTO;
+import accenture.demo.exception.QueueNotificationNumberNotValidException;
 import accenture.demo.exception.appuser.CardIdNotExistException;
 import accenture.demo.exception.capacity.CapacitySetupException;
 import accenture.demo.exception.capacity.InvalidCapacitySetupModifierException;
@@ -271,6 +273,27 @@ public class CapacityServiceImplTest {
     when(userService.findByCardId(cardId)).thenReturn(null);
     capacityService.enterUser(cardId);
   }
+
+  @Test
+  public void setNumberToSendNotification_withValidValue_assertsEqual()
+      throws QueueNotificationNumberNotValidException {
+ Message message = capacityService.setNumberToSendNotification(new QueueNotificationSetupDTO(4));
+  Assert.assertEquals("Notification number successfully set to 4!",message.getMessage());
+  }
+
+  @Test(expected = QueueNotificationNumberNotValidException.class)
+  public void setNumberToSendNotification_withZeroValue_assertsEqual()
+      throws QueueNotificationNumberNotValidException {
+    capacityService.setNumberToSendNotification(new QueueNotificationSetupDTO(0));
+  }
+
+  @Test(expected = QueueNotificationNumberNotValidException.class)
+  public void setNumberToSendNotification_withNegativeValue_assertsEqual()
+      throws QueueNotificationNumberNotValidException {
+    capacityService.setNumberToSendNotification(new QueueNotificationSetupDTO(-5));
+  }
+
+
 
   private void createAppUsers(int amount) {
     for (int i = 0; i < amount; i++) {

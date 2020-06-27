@@ -1,5 +1,6 @@
 package accenture.demo.capacity;
 
+import accenture.demo.exception.QueueNotificationNumberNotValidException;
 import accenture.demo.exception.appuser.CardIdNotExistException;
 import accenture.demo.exception.capacity.CapacitySetupException;
 import accenture.demo.exception.entry.EntryDeniedException;
@@ -20,4 +21,7 @@ public interface CapacityService {
   Message register(AppUser user);
 
   AppUser getNthUserInQueue(int n);
+
+  Message setNumberToSendNotification(QueueNotificationSetupDTO queueNotificationSetupDTO)
+      throws QueueNotificationNumberNotValidException;
 }

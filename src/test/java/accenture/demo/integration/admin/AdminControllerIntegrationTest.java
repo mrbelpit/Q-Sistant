@@ -12,6 +12,7 @@ import accenture.demo.capacity.CapacityInfoDTO;
 import accenture.demo.capacity.CapacityModifier;
 import accenture.demo.capacity.CapacitySetupDTO;
 import accenture.demo.capacity.Message;
+import accenture.demo.capacity.QueueNotificationSetupDTO;
 import accenture.demo.configuration.AppTestConfig;
 import accenture.demo.distance.DistanceSetupDTO;
 import accenture.demo.distance.Unit;
@@ -240,7 +241,7 @@ public class AdminControllerIntegrationTest {
 
   @Test
   public void adminDistance_expectOK_assertsEqual() throws Exception {
-    MvcResult result = mockMvc.perform(put("/admin/distance")
+    MvcResult result = mockMvc.perform(put("/admin/calibrate/distance")
         .contentType(mediaType)
         .header("Authorization", "Bearer " + tokenFirstAdmin)
         .content(objectMapper.writeValueAsString(new DistanceSetupDTO(Unit.METER,3))))
@@ -249,6 +250,32 @@ public class AdminControllerIntegrationTest {
     Message message = objectMapper.readValue(result.getResponse().getContentAsString(), Message.class);
     String expectedMsg = "The distance was successfully set to 3 meter. It is valid from tomorrow.";
     Assert.assertEquals(expectedMsg, message.getMessage());
+  }
+
+  @Test
+  public void adminNotification_expectOK_assertsEqual() throws Exception {
+    MvcResult result = mockMvc.perform(put("/admin/calibrate/notification")
+        .contentType(mediaType)
+        .header("Authorization", "Bearer " + tokenFirstAdmin)
+        .content(objectMapper.writeValueAsString(new QueueNotificationSetupDTO(4))))
+        .andExpect(status().isOk())
+        .andReturn();
+    Message message = objectMapper.readValue(result.getResponse().getContentAsString(), Message.class);
+    String expectedMsg = "Notification number successfully set to 4!";
+    Assert.assertEquals(expectedMsg, message.getMessage());
+  }
+
+  @Test
+  public void adminNotification_expectBadRequest_assertsEqual() throws Exception {
+    MvcResult result = mockMvc.perform(put("/admin/calibrate/notification")
+        .contentType(mediaType)
+        .header("Authorization", "Bearer " + tokenFirstAdmin)
+        .content(objectMapper.writeValueAsString(new QueueNotificationSetupDTO(0))))
+        .andExpect(status().isBadRequest())
+        .andReturn();
+    String message = result.getResponse().getContentAsString();
+    String expectedMsg = "The provided number must be higher than 0!";
+    Assert.assertEquals(expectedMsg, message);
   }
 
   private String registerLoginAndGetUsersToken(String email,
