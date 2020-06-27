@@ -1,5 +1,6 @@
 package accenture.demo.capacity;
 
+import accenture.demo.exception.QueueNotificationNumberNotValidException;
 import accenture.demo.exception.appuser.CardIdNotExistException;
 import accenture.demo.exception.capacity.CapacitySetupException;
 import accenture.demo.exception.capacity.InvalidCapacitySetupModifierException;
@@ -87,7 +88,8 @@ public class CapacityServiceImpl implements CapacityService {
   @Override
   public CapacityInfoDTO generalInfo() {
     CapacityHandler capacityHandler = CapacityHandler.getInstance();
-    Integer maxWorkerAllowedToEnter = (int) (capacityHandler.getMaxWorkplaceSpace() * capacityHandler.getWorkspaceCapacity());
+    Integer maxWorkerAllowedToEnter = (int) (capacityHandler.getMaxWorkplaceSpace()
+        * capacityHandler.getWorkspaceCapacity());
     return new CapacityInfoDTO(
         capacityHandler.getMaxWorkplaceSpace(),
         percentageChanger(),
@@ -131,12 +133,30 @@ public class CapacityServiceImpl implements CapacityService {
   }
 
   private void checkCardId(AppUser user) throws CardIdNotExistException {
-    if (user == null){
+    if (user == null) {
       throw new CardIdNotExistException("The provided card ID is not valid!");
     }
   }
 
-  public AppUser getNthUserInQueue(int n){
+  @Override
+  public AppUser getNthUserInQueue(int n) {
     return CapacityHandler.getInstance().getNthUserInQueue(n);
+  }
+
+  @Override
+  public Message setNumberToSendNotification(QueueNotificationSetupDTO queueNotificationSetupDTO)
+      throws QueueNotificationNumberNotValidException {
+    checkQueueNotificationNumber(queueNotificationSetupDTO);
+    CapacityHandler.getInstance().setQueuePlaceToSendNotificationTo(
+        queueNotificationSetupDTO.getQueueSetupNotificationNumber());
+    return new Message("Notification number successfully set to " + CapacityHandler.getInstance()
+        .getQueuePlaceToSendNotificationTo() + "!");
+  }
+
+  private void checkQueueNotificationNumber(QueueNotificationSetupDTO queueNotificationSetupDTO)
+      throws QueueNotificationNumberNotValidException {
+    if (queueNotificationSetupDTO.getQueueSetupNotificationNumber()<1){
+      throw new QueueNotificationNumberNotValidException("The provided number must be higher than 0!");
+    }
   }
 }

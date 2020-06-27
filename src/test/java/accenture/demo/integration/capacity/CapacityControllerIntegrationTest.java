@@ -8,15 +8,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import accenture.demo.capacity.CapacityHandler;
-import accenture.demo.capacity.CapacityInfoDTO;
-import accenture.demo.capacity.CapacityModifier;
-import accenture.demo.capacity.CapacitySetupDTO;
 import accenture.demo.capacity.Message;
 import accenture.demo.configuration.AppTestConfig;
 import accenture.demo.login.LoginRequestDTO;
 import accenture.demo.login.LoginResponseDTO;
 import accenture.demo.registration.RegistrationRequestDTO;
-import accenture.demo.registration.RegistrationResponseDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
 import org.junit.Assert;

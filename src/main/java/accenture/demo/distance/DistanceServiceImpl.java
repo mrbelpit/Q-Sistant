@@ -4,7 +4,6 @@ import accenture.demo.capacity.Message;
 import accenture.demo.exception.distance.DistanceException;
 import accenture.demo.exception.distance.UnitNotSupportedException;
 import accenture.demo.exception.distance.ValueIsNotValidException;
-import accenture.demo.user.AppUser;
 import java.util.Arrays;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -17,12 +16,13 @@ public class DistanceServiceImpl implements DistanceService {
     checkDistanceSetup(distanceSetupDTO);
 
     switch (distanceSetupDTO.getUnit()) {
-      case METER: case METRE:
+      case METER:
+      case METRE:
         DistanceHandler.setDistanceInMeter(distanceSetupDTO.getValue());
-      return new Message(
-          "The distance was successfully set to " + distanceSetupDTO.getValue() + " "
-              + distanceSetupDTO.getUnit().toString().toLowerCase()
-              + ". It is valid from tomorrow.");
+        return new Message(
+            "The distance was successfully set to " + distanceSetupDTO.getValue() + " "
+                + distanceSetupDTO.getUnit().toString().toLowerCase()
+                + ". It is valid from tomorrow.");
       default:
         return null;
     }
