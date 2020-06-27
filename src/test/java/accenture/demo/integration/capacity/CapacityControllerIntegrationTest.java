@@ -3,7 +3,6 @@ package accenture.demo.integration.capacity;
 import static org.junit.Assert.assertNotEquals;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -75,10 +74,10 @@ public class CapacityControllerIntegrationTest {
     Assert.assertEquals("You can enter the office!", officeRegister(tokenSteve).getMessage());
     System.out.println(CapacityHandler.getInstance().getAllowedUsers().remainingCapacity());
     MvcResult result = mockMvc.perform(post("/office/register")
-        .contentType(mediaType)
         .header("Authorization", "Bearer " + tokenBob))
         .andExpect(status().isOk())
         .andReturn();
+
     System.out.println(CapacityHandler.getInstance().getAllowedUsers().remainingCapacity());
     Message message = objectMapper.readValue(result.getResponse().getContentAsString(), Message.class);
     Assert.assertEquals("Your current place in the queue 1!", message.getMessage());
@@ -103,6 +102,7 @@ public class CapacityControllerIntegrationTest {
     MvcResult result = mockMvc.perform(post("/office/entry/" + 1))
         .andExpect(status().isOk())
         .andReturn();
+
     Message message = objectMapper
         .readValue(result.getResponse().getContentAsString(), Message.class);
     Assert.assertEquals("Entry was successful!", message.getMessage());
@@ -124,7 +124,6 @@ public class CapacityControllerIntegrationTest {
 
   private Message officeRegister(String token) throws Exception {
     MvcResult result = mockMvc.perform(post("/office/register")
-        .contentType(mediaType)
         .header("Authorization", "Bearer " + token))
         .andExpect(status().isOk())
         .andReturn();
@@ -135,6 +134,7 @@ public class CapacityControllerIntegrationTest {
   private String registerLoginAndGetUsersToken(String firstName, String lastName, String email,
       String password, String cardId)
       throws Exception {
+
     mockMvc.perform(post("/register")
         .contentType(mediaType)
         .content(objectMapper.writeValueAsString(
