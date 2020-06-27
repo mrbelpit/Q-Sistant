@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+
+import accenture.demo.security.CurrentSecurityUser;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -51,5 +53,9 @@ public class AppUser {
     this.password = specRegRequestDTO.getPassword();
     this.cardId = specRegRequestDTO.getCardId();
     this.userRole = specRegRequestDTO.getUserRole();
+  }
+
+  public CurrentSecurityUser toCurrentUserDetails() {
+    return CurrentSecurityUser.create(this);
   }
 }

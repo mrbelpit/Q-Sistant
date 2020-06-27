@@ -15,6 +15,7 @@ import accenture.demo.capacity.CapacityService;
 import accenture.demo.capacity.Message;
 import accenture.demo.configuration.AppTestConfig;
 import accenture.demo.exception.entry.EntryDeniedException;
+import accenture.demo.kafka.KafkaMessageService;
 import accenture.demo.user.AppUser;
 import accenture.demo.user.UserRole;
 import accenture.demo.user.UserService;
@@ -52,12 +53,15 @@ public class CapacityControllerUnitTest {
   @MockBean
   private UserService userService;
 
+  @MockBean
+  private KafkaMessageService kafkaMessageService;
+
   private AppUser testAppUser;
 
   @Before
   public void setup() {
     this.mockMvc = MockMvcBuilders.standaloneSetup(
-        new CapacityController(capacityService, userService))
+        new CapacityController(capacityService, userService, kafkaMessageService))
         .setControllerAdvice(new CapacityExceptionHandler())
         .build();
     testAppUser = new AppUser(1L, "Lajos", "The Mighty", "lajos@themightiest.com", "pw",

@@ -17,9 +17,9 @@ import accenture.demo.distance.DistanceSetupDTO;
 import accenture.demo.distance.Unit;
 import accenture.demo.login.LoginRequestDTO;
 import accenture.demo.login.LoginResponseDTO;
-import accenture.demo.registration.RegistrationRequestDTO;
 import accenture.demo.user.AppUser;
 import accenture.demo.user.UserRole;
+import accenture.demo.user.UserService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
@@ -49,7 +49,9 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 public class AdminControllerIntegrationTest {
 
   private MockMvc mockMvc;
-  private String tokenSmith;
+  private String tokenFirstAdmin;
+  @Autowired
+  UserService userService;
 
   @Autowired
   private MediaType mediaType;
@@ -67,23 +69,28 @@ public class AdminControllerIntegrationTest {
     CapacityHandler.getInstance().restartDay();
     CapacityHandler.getInstance().setUsersCurrentlyInOffice(new ArrayList<>());
 
+
     mockMvc = MockMvcBuilders
         .webAppContextSetup(context)
         .apply(springSecurity())
         .build();
-
-    tokenSmith = registerLoginAndGetUsersToken("Smith", "smith", "smith@asd.com", "asd",
-        "6");
+/*    userService.createNewSpecialUser(new SpecialAppUserRegistrationDTO("Tom", "Denem", "asd@gmail.com", "asd", "25",
+        UserRole.ADMIN));*/
+    tokenFirstAdmin = registerLoginAndGetUsersToken("bob@bob.com","bob");
+    //tokenFirstAdmin = registerLoginAndGetUsersToken("asd@gmail.com","asd");
   }
 
   @Test
   public void adminRegisterVip_expectOK_assertsEqual() throws Exception {
+
     MvcResult result = mockMvc.perform(post("/admin/user/register")
         .contentType(mediaType)
-        .header("Authorization", "Bearer " + tokenSmith)
+        .header("Authorization", "Bearer " + tokenFirstAdmin)
         .content(objectMapper
             .writeValueAsString(
-                new SpecialAppUserRegistrationDTO("Tom", "Denem", "asd@gmail.com", "asd", "25",
+                new SpecialAppUserRegistrationDTO("Lajos", "The Mightiest", "asd@gmail.com",
+                        "das",
+                        "25",
                     UserRole.VIP))))
         .andExpect(status().isOk())
         .andReturn();
@@ -104,7 +111,7 @@ public class AdminControllerIntegrationTest {
 
     MvcResult result = mockMvc.perform(post("/admin/users/register")
         .contentType(mediaType)
-        .header("Authorization", "Bearer " + tokenSmith)
+        .header("Authorization", "Bearer " + tokenFirstAdmin)
         .content(objectMapper.writeValueAsString(vipList)))
         .andExpect(status().isOk())
         .andReturn();
@@ -129,7 +136,7 @@ public class AdminControllerIntegrationTest {
 
     mockMvc.perform(post("/admin/users/register")
         .contentType(mediaType)
-        .header("Authorization", "Bearer " + tokenSmith)
+        .header("Authorization", "Bearer " + tokenFirstAdmin)
         .content(objectMapper.writeValueAsString(vipList)))
         .andExpect(status().isOk());
 
@@ -137,7 +144,7 @@ public class AdminControllerIntegrationTest {
 
     MvcResult result = mockMvc.perform(get("/admin/users/" + filter)
         .contentType(mediaType)
-        .header("Authorization", "Bearer " + tokenSmith))
+        .header("Authorization", "Bearer " + tokenFirstAdmin))
         .andExpect(status().isOk())
         .andReturn();
 
@@ -153,7 +160,7 @@ public class AdminControllerIntegrationTest {
 
     MvcResult result = mockMvc.perform(get("/admin/users/" + filter)
         .contentType(mediaType)
-        .header("Authorization", "Bearer " + tokenSmith))
+        .header("Authorization", "Bearer " + tokenFirstAdmin))
         .andExpect(status().isOk())
         .andReturn();
 
@@ -170,7 +177,7 @@ public class AdminControllerIntegrationTest {
 
     MvcResult result = mockMvc.perform(get("/admin/users/" + filter)
         .contentType(mediaType)
-        .header("Authorization", "Bearer " + tokenSmith))
+        .header("Authorization", "Bearer " + tokenFirstAdmin))
         .andExpect(status().isBadRequest())
         .andReturn();
 
@@ -185,7 +192,7 @@ public class AdminControllerIntegrationTest {
 
     MvcResult result = mockMvc.perform(get("/admin/users/" + filter)
         .contentType(mediaType)
-        .header("Authorization", "Bearer " + tokenSmith))
+        .header("Authorization", "Bearer " + tokenFirstAdmin))
         .andExpect(status().isBadRequest())
         .andReturn();
 
@@ -199,7 +206,7 @@ public class AdminControllerIntegrationTest {
     Integer percentage = 20;
     MvcResult result = mockMvc.perform(put("/admin/calibrate/headcount")
         .contentType(mediaType)
-        .header("Authorization", "Bearer " + tokenSmith)
+        .header("Authorization", "Bearer " + tokenFirstAdmin)
         .content(objectMapper
             .writeValueAsString(
                 new CapacitySetupDTO(CapacityModifier.WORKSPACE_CAPACITY, percentage))))
@@ -216,7 +223,7 @@ public class AdminControllerIntegrationTest {
   @Test
   public void adminInfo_expectOK_assertsEqual() throws Exception {
     MvcResult result = mockMvc.perform(get("/admin/info")
-        .header("Authorization", "Bearer " + tokenSmith))
+        .header("Authorization", "Bearer " + tokenFirstAdmin))
         .andExpect(status().isOk())
         .andReturn();
 
@@ -224,7 +231,7 @@ public class AdminControllerIntegrationTest {
         .readValue(result.getResponse().getContentAsString(), CapacityInfoDTO.class);
 
     Assert.assertEquals(Integer.valueOf(1), capacityInfoDTO.getFreeSpace());
-    Assert.assertEquals(0, capacityInfoDTO.getWorkersInTheBuilding().size());
+    Assert.assertEquals(0, capacityInfoDTO.getEmployeesInTheBuilding().size());
     Assert.assertEquals(Integer.valueOf(1), capacityInfoDTO.getMaxWorkerAllowedToEnter());
     Assert.assertEquals(Integer.valueOf(10), capacityInfoDTO.getWorkspaceCapacityPercentage());
     Assert.assertEquals(Integer.valueOf(10), capacityInfoDTO.getMaxWorkplaceSpace());
@@ -235,7 +242,7 @@ public class AdminControllerIntegrationTest {
   public void adminDistance_expectOK_assertsEqual() throws Exception {
     MvcResult result = mockMvc.perform(put("/admin/distance")
         .contentType(mediaType)
-        .header("Authorization", "Bearer " + tokenSmith)
+        .header("Authorization", "Bearer " + tokenFirstAdmin)
         .content(objectMapper.writeValueAsString(new DistanceSetupDTO(Unit.METER,3))))
         .andExpect(status().isOk())
         .andReturn();
@@ -244,15 +251,9 @@ public class AdminControllerIntegrationTest {
     Assert.assertEquals(expectedMsg, message.getMessage());
   }
 
-  private String registerLoginAndGetUsersToken(String firstName, String lastName, String email,
-      String password, String cardId)
+  private String registerLoginAndGetUsersToken(String email,
+      String password)
       throws Exception {
-    mockMvc.perform(post("/register")
-        .contentType(mediaType)
-        .content(objectMapper.writeValueAsString(
-            new RegistrationRequestDTO(firstName, lastName, email, password, cardId))))
-        .andExpect(status().isOk())
-        .andReturn();
 
     MvcResult result = mockMvc.perform(post("/login")
         .contentType(mediaType)
