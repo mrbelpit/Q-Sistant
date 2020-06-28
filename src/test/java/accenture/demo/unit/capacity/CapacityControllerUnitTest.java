@@ -86,6 +86,17 @@ public class CapacityControllerUnitTest {
 
   @Test
   @WithMockUser
+  public void getAssignedStationImage_withStationAssigned_assertEquals() throws Exception {
+    when(capacityService.getAssignedStationImage(any())).thenReturn(new byte[2400]);
+    MvcResult result = mockMvc.perform(get("/office/station")
+        .contentType(contentType)
+        .contentType(objectMapper.writeValueAsString(testAppUser)))
+        .andReturn();
+    assertEquals(MediaType.IMAGE_JPEG_VALUE, result.getResponse().getContentType());
+  }
+
+  @Test
+  @WithMockUser
   public void registerPlace_placedInQueue() throws Exception {
     Message message = new Message("Your current place in the queue 1!");
     when(capacityService.register(any())).thenReturn(message);

@@ -2,7 +2,7 @@ package accenture.demo.distance;
 
 public class DistanceHandler {
 
-  public static Integer distanceInMeter = 5;
+  private static Integer distanceInMeter = 5;
 
   public static Integer getDistanceInMeter() {
     return distanceInMeter;
