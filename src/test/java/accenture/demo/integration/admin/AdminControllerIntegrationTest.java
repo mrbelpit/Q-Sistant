@@ -340,6 +340,19 @@ public class AdminControllerIntegrationTest {
     assertEquals(MediaType.IMAGE_JPEG_VALUE, result.getResponse().getContentType());
   }
 
+  @Test
+  public void adminDistance_withNegativeValue_expectBadRequest_assertsEqual() throws Exception {
+    MvcResult result = mockMvc.perform(put("/admin/calibrate/distance")
+        .contentType(mediaType)
+        .header("Authorization", "Bearer " + tokenFirstAdmin)
+        .content(objectMapper.writeValueAsString(new DistanceSetupDTO(Unit.METER,-1))))
+        .andExpect(status().isBadRequest())
+        .andReturn();
+    String msg = result.getResponse().getContentAsString();
+    String expectedMsg = "The provided value is less than 0!";
+    Assert.assertEquals(expectedMsg, msg);
+  }
+
   private String registerLoginAndGetUsersToken(String email,
       String password)
       throws Exception {
