@@ -157,7 +157,6 @@ public class CapacityServiceImpl implements CapacityService {
     CapacityHandler.getInstance().restartDay();
   }
 
-
   @Override
   public Message setNumberToSendNotification(QueueNotificationSetupDTO queueNotificationSetupDTO)
       throws QueueNotificationNumberNotValidException {

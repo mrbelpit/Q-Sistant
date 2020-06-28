@@ -199,7 +199,6 @@ public class AdminControllerIntegrationTest {
     Assert.assertEquals("User filter is not valid!", msg);
   }
 
-
   @Test
   public void adminCalibrate_expectOK_assertsEqual() throws Exception {
     Integer percentage = 20;
