@@ -1,5 +1,6 @@
 package accenture.demo.integration.admin;
 
+import static org.junit.Assert.assertEquals;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -328,6 +329,15 @@ public class AdminControllerIntegrationTest {
         .readValue(result2.getResponse().getContentAsString(), new TypeReference<>() {
         });
     Assert.assertEquals(0, userList2.size());
+  }
+
+  @Test
+  public void currentOfficeLayout_assertEquals() throws Exception {
+    MvcResult result = mockMvc.perform(get("/admin/layout")
+            .header("Authorization", "Bearer " + tokenFirstAdmin))
+            .andExpect(status().isOk())
+            .andReturn();
+    assertEquals(MediaType.IMAGE_JPEG_VALUE, result.getResponse().getContentType());
   }
 
   private String registerLoginAndGetUsersToken(String email,

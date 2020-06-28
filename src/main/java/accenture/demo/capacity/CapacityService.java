@@ -25,7 +25,7 @@ public interface CapacityService {
   byte[] currentLayout();
 
   byte[] getAssignedStationImage(AppUser user);
-  
+
   Message setNumberToSendNotification(QueueNotificationSetupDTO queueNotificationSetupDTO)
       throws QueueNotificationNumberNotValidException;
 }

@@ -10,6 +10,7 @@ import accenture.demo.user.AppUser;
 import accenture.demo.user.UserService;
 import java.util.Queue;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -149,7 +150,14 @@ public class CapacityServiceImpl implements CapacityService {
 
   public byte[] getAssignedStationImage(AppUser user) {
     return CapacityHandler.getInstance().getAssignedStationImage(user);
-    
+  }
+
+  @Scheduled(cron = "0 0 0 * * ?")
+  public void restartDay() {
+    CapacityHandler.getInstance().restartDay();
+  }
+
+
   @Override
   public Message setNumberToSendNotification(QueueNotificationSetupDTO queueNotificationSetupDTO)
       throws QueueNotificationNumberNotValidException {
