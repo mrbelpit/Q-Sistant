@@ -19,6 +19,18 @@ The application uses the layout image of the office to populate a list of distri
 Workstations need to be designated by **coherent blue shapes**. This blue colour is **ideally rgb(0, 0, 255)**, but there can be a **maximum of 5 point error in the intensity** of each three colours. This means that **a pixel with colour rgb(5, 5, 250) is also considered a workstation pixel**. Make sure that **only workstations have the exact colour blue** on the image. As long as shapes are coherent (you can make a path between any two pixels in them by only going through blue pixels) they are considered a single workstation.  
 Here is a correct office layout:
 ![A correct office layout](https://github.com/mrbelpit/Q-Sistant/blob/master/layout/accenture_layout.jpg?raw=true)  
+### Output images:  
+#### HR deparment's complete office layout:  
+The HR department (admins) has the ability to query the current status of the office by accessing the **/admin/layout** endpoint. This means that they can see occupied, reserved, free and unavailable workstations in the office.
+- A workstation is:
+  - **RESERVED (orange)** if it has been assigned to a user, but the user has not yet entered the office.
+  - **OCCUPIED (red)** if it has been assigned to a user, and the user has already entered the office.
+  - **UNAVAILABLE (pink)** if it is within the specified minimum range of a RESERVED or OCCUPIED workstation.
+  - **FREE (green)** if it has not been RESERVED, OCCUPIED and is not UNAVAILABLE  
+![Example generated office layout image](https://github.com/mrbelpit/Q-Sistant/blob/master/layout/adminlayout.jpg?raw=true)
+#### Employee's assigned workstation displayed on the office layout:  
+Users that have gained access to enter the office get an assigned workstation. They can view the position of their workstation by accessing the **/office/station** endpoint. The accessing user's workstation is designated by a relatively big red rectangle.
+![A user's assigned workstation](https://github.com/mrbelpit/Q-Sistant/blob/master/layout/officestation.jpg?raw=true)
 
 ## Calibration endpoints:
 
