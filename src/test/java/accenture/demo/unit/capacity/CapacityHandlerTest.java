@@ -5,6 +5,7 @@ import accenture.demo.user.AppUser;
 import accenture.demo.user.UserRole;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Queue;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -128,6 +129,39 @@ public class CapacityHandlerTest {
     Assert.assertEquals(1, CapacityHandler.getInstance().getAllowedUsers().size());
     Assert.assertEquals(2, CapacityHandler.getInstance().getUsersCurrentlyInOffice().size());
     Assert.assertEquals(1, CapacityHandler.getInstance().getNumberOfAssingedStations());
+  }
+
+  @Test
+  public void getNthUserInQueue_withLessThanNUsers_assertNull() {
+    Queue<AppUser> queue = CapacityHandler.getInstance().getUserQueue();
+    for (int i = 0; i < 5; i++) {
+      AppUser user = new AppUser();
+      user.setId((long)i);
+      queue.add(user);
+    }
+    Assert.assertNull(CapacityHandler.getInstance().getNthUserInQueue(6));
+  }
+
+  @Test
+  public void getNthUserInQueue_withExactlyNUsers_assertEquals() {
+    Queue<AppUser> queue = CapacityHandler.getInstance().getUserQueue();
+    for (int i = 0; i < 5; i++) {
+      AppUser user = new AppUser();
+      user.setId((long)i);
+      queue.add(user);
+    }
+    Assert.assertEquals(4, CapacityHandler.getInstance().getNthUserInQueue(5).getId(), 0.0001);
+  }
+
+  @Test
+  public void getNthUserInQueue_withMoreThanNUsers_assertEquals() {
+    Queue<AppUser> queue = CapacityHandler.getInstance().getUserQueue();
+    for (int i = 0; i < 5; i++) {
+      AppUser user = new AppUser();
+      user.setId((long)i);
+      queue.add(user);
+    }
+    Assert.assertEquals(2, CapacityHandler.getInstance().getNthUserInQueue(3).getId(), 0.0001);
   }
 
   private void setupCapacityHandler(Integer maxWorkplaceSpace, Integer workspaceCapacity) {

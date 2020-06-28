@@ -118,7 +118,6 @@ public class CapacityHandler {
                     (stationWithLeastFreeNeighbors == null ||
                             candidateStation.getNumberOfFreeNearbyStations() < stationWithLeastFreeNeighbors.getNumberOfFreeNearbyStations())) {
                 stationWithLeastFreeNeighbors = candidateStation;
-                System.out.println("New station with least free neighbors: " + stationWithLeastFreeNeighbors.getNumberOfFreeNearbyStations());
             }
         }
         if (stationWithLeastFreeNeighbors != null) {
