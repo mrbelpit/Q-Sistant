@@ -5,7 +5,6 @@ import accenture.demo.distance.DistanceServiceImpl;
 import accenture.demo.distance.DistanceSetupDTO;
 import accenture.demo.distance.Unit;
 import accenture.demo.exception.distance.DistanceException;
-import accenture.demo.exception.distance.UnitNotSupportedException;
 import accenture.demo.exception.distance.ValueIsNotValidException;
 import org.junit.Assert;
 import org.junit.Before;
@@ -20,30 +19,41 @@ public class DistanceServiceImplTest {
 
   @Before
   public void setup() {
-distanceService = new DistanceServiceImpl();
+    distanceService = new DistanceServiceImpl();
   }
 
   @Test
   public void setDistance_withValidUnitMeterAndValue_assertsEqual() throws DistanceException {
-   Message message = distanceService.setDistance(new DistanceSetupDTO(Unit.METER,3));
+    Message message = distanceService.setDistance(new DistanceSetupDTO(Unit.METER, 3));
     String expectedMsg = "The distance was successfully set to 3 meter. It is valid from tomorrow.";
     Assert.assertEquals(expectedMsg, message.getMessage());
   }
 
   @Test
   public void setDistance_withValidUnitMetreAndValue_assertsEqual() throws DistanceException {
-    Message message = distanceService.setDistance(new DistanceSetupDTO(Unit.METRE,3));
+    Message message = distanceService.setDistance(new DistanceSetupDTO(Unit.METRE, 3));
     String expectedMsg = "The distance was successfully set to 3 metre. It is valid from tomorrow.";
     Assert.assertEquals(expectedMsg, message.getMessage());
   }
 
   @Test(expected = ValueIsNotValidException.class)
   public void setDistance_withNegativeValue() throws DistanceException {
-    distanceService.setDistance(new DistanceSetupDTO(Unit.METER,-1));
+    distanceService.setDistance(new DistanceSetupDTO(Unit.METER, -1));
   }
 
   @Test(expected = ValueIsNotValidException.class)
   public void setDistance_withBigValue() throws DistanceException {
-    distanceService.setDistance(new DistanceSetupDTO(Unit.METER,100));
+    distanceService.setDistance(new DistanceSetupDTO(Unit.METER, 100));
+  }
+
+  @Test
+  public void getDistanceInPixel_withDefaultValue_assertsEqual() {
+    Assert.assertEquals(Integer.valueOf(50), distanceService.getDistanceInPixel());
+  }
+
+  @Test
+  public void getDistanceInPixel_withOtherValue_assertsEqual() throws DistanceException {
+    distanceService.setDistance(new DistanceSetupDTO(Unit.METER,2));
+    Assert.assertEquals(Integer.valueOf(20), distanceService.getDistanceInPixel());
   }
 }
