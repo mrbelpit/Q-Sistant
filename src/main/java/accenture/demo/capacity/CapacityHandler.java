@@ -4,7 +4,6 @@ import accenture.demo.distance.DistanceHandler;
 import accenture.demo.user.AppUser;
 import accenture.demo.user.UserRole;
 import accenture.demo.imagemanipulation.ImageProcessor;
-import org.springframework.scheduling.annotation.Scheduled;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -90,7 +89,6 @@ public class CapacityHandler {
         }
     }
 
-    @Scheduled(cron = "0 0 0 * * ?")
     public void restartDay() {
         allowedUsers = new LinkedBlockingQueue<>((int) (maxWorkplaceSpace * workspaceCapacity));
         userQueue = new LinkedList<>();
