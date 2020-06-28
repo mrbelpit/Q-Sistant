@@ -33,6 +33,7 @@ public class DistanceServiceImpl implements DistanceService {
     return DistanceHandler.getDistanceInMeter();
   }
 
+
   @Override
   public Integer getDistanceInPixel() {
     return DistanceHandler.getDistanceInPixel();
