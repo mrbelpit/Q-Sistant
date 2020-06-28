@@ -1,5 +1,6 @@
 package accenture.demo.admin;
 
+import accenture.demo.exception.QueueNotificationNumberNotValidException;
 import accenture.demo.exception.distance.UnitNotSupportedException;
 import accenture.demo.exception.distance.ValueIsNotValidException;
 import accenture.demo.exception.userfilter.UserFilterIsNotValidException;
@@ -29,4 +30,12 @@ public class AdminExceptionHandler {
       ValueIsNotValidException exception) {
     return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
   }
+
+
+  @ExceptionHandler(value = QueueNotificationNumberNotValidException.class)
+  public ResponseEntity<?> handleQueueNotificationNumberNotValidException(
+      QueueNotificationNumberNotValidException exception) {
+    return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
+  }
+
 }

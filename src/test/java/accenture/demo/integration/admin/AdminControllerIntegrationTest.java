@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -13,6 +14,7 @@ import accenture.demo.capacity.CapacityInfoDTO;
 import accenture.demo.capacity.CapacityModifier;
 import accenture.demo.capacity.CapacitySetupDTO;
 import accenture.demo.capacity.Message;
+import accenture.demo.capacity.QueueNotificationSetupDTO;
 import accenture.demo.configuration.AppTestConfig;
 import accenture.demo.distance.DistanceSetupDTO;
 import accenture.demo.distance.Unit;
@@ -143,7 +145,6 @@ public class AdminControllerIntegrationTest {
     String filter = "vip";
 
     MvcResult result = mockMvc.perform(get("/admin/users/" + filter)
-        .contentType(mediaType)
         .header("Authorization", "Bearer " + tokenFirstAdmin))
         .andExpect(status().isOk())
         .andReturn();
@@ -159,7 +160,6 @@ public class AdminControllerIntegrationTest {
     String filter = "all";
 
     MvcResult result = mockMvc.perform(get("/admin/users/" + filter)
-        .contentType(mediaType)
         .header("Authorization", "Bearer " + tokenFirstAdmin))
         .andExpect(status().isOk())
         .andReturn();
@@ -176,7 +176,6 @@ public class AdminControllerIntegrationTest {
     String filter = null;
 
     MvcResult result = mockMvc.perform(get("/admin/users/" + filter)
-        .contentType(mediaType)
         .header("Authorization", "Bearer " + tokenFirstAdmin))
         .andExpect(status().isBadRequest())
         .andReturn();
@@ -191,7 +190,6 @@ public class AdminControllerIntegrationTest {
     String filter = "asdasd";
 
     MvcResult result = mockMvc.perform(get("/admin/users/" + filter)
-        .contentType(mediaType)
         .header("Authorization", "Bearer " + tokenFirstAdmin))
         .andExpect(status().isBadRequest())
         .andReturn();
@@ -240,7 +238,7 @@ public class AdminControllerIntegrationTest {
 
   @Test
   public void adminDistance_expectOK_assertsEqual() throws Exception {
-    MvcResult result = mockMvc.perform(put("/admin/distance")
+    MvcResult result = mockMvc.perform(put("/admin/calibrate/distance")
         .contentType(mediaType)
         .header("Authorization", "Bearer " + tokenFirstAdmin)
         .content(objectMapper.writeValueAsString(new DistanceSetupDTO(Unit.METER,3))))
@@ -252,9 +250,89 @@ public class AdminControllerIntegrationTest {
   }
 
   @Test
+  public void adminNotification_expectOK_assertsEqual() throws Exception {
+    MvcResult result = mockMvc.perform(put("/admin/calibrate/notification")
+        .contentType(mediaType)
+        .header("Authorization", "Bearer " + tokenFirstAdmin)
+        .content(objectMapper.writeValueAsString(new QueueNotificationSetupDTO(4))))
+        .andExpect(status().isOk())
+        .andReturn();
+    Message message = objectMapper.readValue(result.getResponse().getContentAsString(), Message.class);
+    String expectedMsg = "Notification number successfully set to 4!";
+    Assert.assertEquals(expectedMsg, message.getMessage());
+  }
+
+  @Test
+  public void adminNotification_expectBadRequest_assertsEqual() throws Exception {
+    MvcResult result = mockMvc.perform(put("/admin/calibrate/notification")
+        .contentType(mediaType)
+        .header("Authorization", "Bearer " + tokenFirstAdmin)
+        .content(objectMapper.writeValueAsString(new QueueNotificationSetupDTO(0))))
+        .andExpect(status().isBadRequest())
+        .andReturn();
+    String message = result.getResponse().getContentAsString();
+    String expectedMsg = "The provided number must be higher than 0!";
+    Assert.assertEquals(expectedMsg, message);
+  }
+
+  @Test
+  public void adminDeleteUser_expectOK_assertsEqual() throws Exception {
+    String filter = "vip";
+
+    MvcResult result0 = mockMvc.perform(get("/admin/users/" + filter)
+        .header("Authorization", "Bearer " + tokenFirstAdmin))
+        .andExpect(status().isOk())
+        .andReturn();
+
+    List<AppUser> userList0 = objectMapper
+        .readValue(result0.getResponse().getContentAsString(), new TypeReference<>() {
+        });
+    Assert.assertEquals(0, userList0.size());
+
+
+    mockMvc.perform(post("/admin/user/register")
+        .contentType(mediaType)
+        .header("Authorization", "Bearer " + tokenFirstAdmin)
+        .content(objectMapper
+            .writeValueAsString(
+                new SpecialAppUserRegistrationDTO("Lajos", "The Mightiest", "asd@gmail.com",
+                    "das",
+                    "25",
+                    UserRole.VIP))))
+        .andExpect(status().isOk());
+
+    MvcResult result1 = mockMvc.perform(get("/admin/users/" + filter)
+        .header("Authorization", "Bearer " + tokenFirstAdmin))
+        .andExpect(status().isOk())
+        .andReturn();
+
+    List<AppUser> userList1 = objectMapper
+        .readValue(result1.getResponse().getContentAsString(), new TypeReference<>() {
+        });
+    Assert.assertEquals(1, userList1.size());
+
+    MvcResult result =   mockMvc.perform(delete("/admin/users/2")
+        .header("Authorization", "Bearer " + tokenFirstAdmin))
+        .andExpect(status().isOk()).andReturn();
+
+    AppUser user = objectMapper
+        .readValue(result.getResponse().getContentAsString(), AppUser.class);
+    Assert.assertEquals("Lajos",user.getFirstName());
+
+    MvcResult result2 = mockMvc.perform(get("/admin/users/" + filter)
+        .header("Authorization", "Bearer " + tokenFirstAdmin))
+        .andExpect(status().isOk())
+        .andReturn();
+
+    List<AppUser> userList2 = objectMapper
+        .readValue(result2.getResponse().getContentAsString(), new TypeReference<>() {
+        });
+    Assert.assertEquals(0, userList2.size());
+  }
+
+  @Test
   public void currentOfficeLayout_assertEquals() throws Exception {
     MvcResult result = mockMvc.perform(get("/admin/layout")
-            .contentType(mediaType)
             .header("Authorization", "Bearer " + tokenFirstAdmin))
             .andExpect(status().isOk())
             .andReturn();
