@@ -7,20 +7,30 @@ import accenture.demo.exception.capacity.InvalidCapacitySetupModifierException;
 import accenture.demo.exception.capacity.InvalidCapacitySetupValueException;
 import accenture.demo.exception.entry.EntryDeniedException;
 import accenture.demo.user.AppUser;
+import accenture.demo.user.AppUserDTO;
 import accenture.demo.user.UserService;
-import java.util.Queue;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Queue;
+import java.util.stream.Collectors;
 
 @Service
 public class CapacityServiceImpl implements CapacityService {
 
   private UserService userService;
 
+  private ModelMapper modelMapper;
+
   @Autowired
-  public CapacityServiceImpl(UserService userService) {
+  public CapacityServiceImpl(UserService userService, ModelMapper modelMapper) {
     this.userService = userService;
+    this.modelMapper = modelMapper;
   }
 
   @Override
@@ -64,15 +74,15 @@ public class CapacityServiceImpl implements CapacityService {
     if (capacitySetupDTO.getModifier().equals(CapacityModifier.WORKPLACE_SPACE)) {
       CapacityHandler.getInstance().setMaxWorkplaceSpace(capacitySetupDTO.getValue());
       return new Message(
-          "The max workplace space place successfully set to " + CapacityHandler.getInstance()
-              .getMaxWorkplaceSpace() + ". It is valid from tomorrow.");
+              "The max workplace space place successfully set to " + CapacityHandler.getInstance()
+                      .getMaxWorkplaceSpace() + ". It is valid from tomorrow.");
     }
 
     if (capacitySetupDTO.getModifier().equals(CapacityModifier.WORKSPACE_CAPACITY)
         && capacitySetupDTO.getValue() < percentageChanger()) {
       CapacityHandler.getInstance().setWorkspaceCapacity(capacitySetupDTO.getValue());
       return new Message(
-          "The max workplace capacity successfully set to " + percentageChanger()
+              "The max workplace capacity successfully set to " + percentageChanger()
               + ". It is valid from tomorrow.");
     }
 
@@ -80,7 +90,7 @@ public class CapacityServiceImpl implements CapacityService {
         && capacitySetupDTO.getValue() > percentageChanger()) {
       CapacityHandler.getInstance().increaseWorkspaceCapacity(capacitySetupDTO.getValue());
       return new Message(
-          "The max workplace capacity successfully set to " + percentageChanger()
+              "The max workplace capacity successfully set to " + percentageChanger()
               + ". It is valid from now.");
     }
     return null;
@@ -90,15 +100,24 @@ public class CapacityServiceImpl implements CapacityService {
   public CapacityInfoDTO generalInfo() {
     CapacityHandler capacityHandler = CapacityHandler.getInstance();
     Integer maxWorkerAllowedToEnter = (int) (capacityHandler.getMaxWorkplaceSpace()
-        * capacityHandler.getWorkspaceCapacity());
+                                             * capacityHandler.getWorkspaceCapacity());
+    List<AppUserDTO> userDTOList =
+            convertAppUserListToDTOList(capacityHandler.getUsersCurrentlyInOffice());
+
     return new CapacityInfoDTO(
-        capacityHandler.getMaxWorkplaceSpace(),
-        percentageChanger(),
-        maxWorkerAllowedToEnter,
-        capacityHandler.getUsersCurrentlyInOffice().size(),
-        capacityHandler.getAllowedUsers().remainingCapacity(),
-        capacityHandler.getUsersCurrentlyInOffice());
+            capacityHandler.getMaxWorkplaceSpace(),
+            percentageChanger(),
+            maxWorkerAllowedToEnter,
+            capacityHandler.getUsersCurrentlyInOffice().size(),
+            capacityHandler.getAllowedUsers().remainingCapacity(),
+            userDTOList);
   }
+
+  private List<AppUserDTO> convertAppUserListToDTOList(ArrayList<AppUser> userList) {
+        return  userList.stream()
+            .map(u -> modelMapper.map(u, AppUserDTO.class))
+            .collect(Collectors.toList());
+   }
 
   @Override
   public Message register(AppUser user) {
@@ -106,7 +125,7 @@ public class CapacityServiceImpl implements CapacityService {
   }
 
   private void checkCapacitySetupDTO(CapacitySetupDTO capacitySetupDTO)
-      throws CapacitySetupException {
+          throws CapacitySetupException {
     if (capacitySetupDTO == null) {
       throw new CapacitySetupException("CapacitySetupDTO can not be null!");
     }
@@ -159,18 +178,19 @@ public class CapacityServiceImpl implements CapacityService {
 
   @Override
   public Message setNumberToSendNotification(QueueNotificationSetupDTO queueNotificationSetupDTO)
-      throws QueueNotificationNumberNotValidException {
+          throws QueueNotificationNumberNotValidException {
     checkQueueNotificationNumber(queueNotificationSetupDTO);
     CapacityHandler.getInstance().setQueuePlaceToSendNotificationTo(
-        queueNotificationSetupDTO.getQueueSetupNotificationNumber());
+            queueNotificationSetupDTO.getQueueSetupNotificationNumber());
     return new Message("Notification number successfully set to " + CapacityHandler.getInstance()
-        .getQueuePlaceToSendNotificationTo() + "!");
+            .getQueuePlaceToSendNotificationTo() + "!");
   }
 
   private void checkQueueNotificationNumber(QueueNotificationSetupDTO queueNotificationSetupDTO)
-      throws QueueNotificationNumberNotValidException {
-    if (queueNotificationSetupDTO.getQueueSetupNotificationNumber()<1){
-      throw new QueueNotificationNumberNotValidException("The provided number must be higher than 0!");
+          throws QueueNotificationNumberNotValidException {
+    if (queueNotificationSetupDTO.getQueueSetupNotificationNumber() < 1) {
+      throw new QueueNotificationNumberNotValidException(
+              "The provided number must be higher than 0!");
     }
   }
 }

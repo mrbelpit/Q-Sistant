@@ -14,6 +14,7 @@ import accenture.demo.login.LoginRequestDTO;
 import accenture.demo.login.LoginResponseDTO;
 import accenture.demo.registration.RegistrationRequestDTO;
 import accenture.demo.user.AppUser;
+import accenture.demo.user.AppUserDTO;
 import accenture.demo.user.UserRole;
 import accenture.demo.user.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -155,7 +156,7 @@ public class AdminControllerIntegrationTest {
             .andExpect(status().isOk())
             .andReturn();
 
-    List<AppUser> userList = objectMapper
+    List<AppUserDTO> userList = objectMapper
             .readValue(result.getResponse().getContentAsString(), new TypeReference<>() {
             });
     Assert.assertEquals(2, userList.size());
@@ -170,7 +171,7 @@ public class AdminControllerIntegrationTest {
             .andExpect(status().isOk())
             .andReturn();
 
-    List<AppUser> userList = objectMapper
+    List<AppUserDTO> userList = objectMapper
             .readValue(result.getResponse().getContentAsString(), new TypeReference<>() {
             });
     Assert.assertEquals(1, userList.size());
@@ -291,7 +292,7 @@ public class AdminControllerIntegrationTest {
             .andExpect(status().isOk())
             .andReturn();
 
-    List<AppUser> userList0 = objectMapper
+    List<AppUserDTO> userList0 = objectMapper
             .readValue(result0.getResponse().getContentAsString(), new TypeReference<>() {
             });
     Assert.assertEquals(0, userList0.size());
@@ -314,7 +315,7 @@ public class AdminControllerIntegrationTest {
             .andExpect(status().isOk())
             .andReturn();
 
-    List<AppUser> userList1 = objectMapper
+    List<AppUserDTO> userList1 = objectMapper
             .readValue(result1.getResponse().getContentAsString(), new TypeReference<>() {
             });
     Assert.assertEquals(1, userList1.size());
@@ -332,7 +333,7 @@ public class AdminControllerIntegrationTest {
             .andExpect(status().isOk())
             .andReturn();
 
-    List<AppUser> userList2 = objectMapper
+    List<AppUserDTO> userList2 = objectMapper
             .readValue(result2.getResponse().getContentAsString(), new TypeReference<>() {
             });
     Assert.assertEquals(0, userList2.size());

@@ -27,7 +27,7 @@ public class CapacityHandlerTest {
   public void addUser_expectsEqual() {
     CapacityHandler.getInstance().registerAppUser(new AppUser());
     Assert.assertEquals(1, CapacityHandler.getInstance().getAllowedUsers().size());
-    Assert.assertEquals(1, CapacityHandler.getInstance().getNumberOfAssingedStations());
+    Assert.assertEquals(1, CapacityHandler.getInstance().getNumberOfAssignedStations());
   }
 
   @Test
@@ -41,7 +41,7 @@ public class CapacityHandlerTest {
     }
     Assert.assertEquals(10, CapacityHandler.getInstance().getAllowedUsers().size());
     Assert.assertEquals(1, CapacityHandler.getInstance().getUserQueue().size());
-    Assert.assertEquals(10, CapacityHandler.getInstance().getNumberOfAssingedStations());
+    Assert.assertEquals(10, CapacityHandler.getInstance().getNumberOfAssignedStations());
   }
 
   @Test
@@ -57,23 +57,23 @@ public class CapacityHandlerTest {
     }
     Assert.assertEquals(10, CapacityHandler.getInstance().getAllowedUsers().size());
     Assert.assertEquals(1, CapacityHandler.getInstance().getUserQueue().size());
-    Assert.assertEquals(10, CapacityHandler.getInstance().getNumberOfAssingedStations());
+    Assert.assertEquals(10, CapacityHandler.getInstance().getNumberOfAssignedStations());
 
     CapacityHandler.getInstance().exitUser(user);
 
     Assert.assertEquals(10, CapacityHandler.getInstance().getAllowedUsers().size());
     Assert.assertEquals(0, CapacityHandler.getInstance().getUserQueue().size());
-    Assert.assertEquals(10, CapacityHandler.getInstance().getNumberOfAssingedStations());
+    Assert.assertEquals(10, CapacityHandler.getInstance().getNumberOfAssignedStations());
   }
 
   @Test
   public void increaseCapacity_assertsEqual() {
     CapacityHandler.getInstance().registerAppUser(new AppUser());
     Assert.assertEquals(1, CapacityHandler.getInstance().getAllowedUsers().size());
-    Assert.assertEquals(1, CapacityHandler.getInstance().getNumberOfAssingedStations());
+    Assert.assertEquals(1, CapacityHandler.getInstance().getNumberOfAssignedStations());
     CapacityHandler.getInstance().increaseWorkspaceCapacity(15);
     Assert.assertEquals(1, CapacityHandler.getInstance().getAllowedUsers().size());
-    Assert.assertEquals(1, CapacityHandler.getInstance().getNumberOfAssingedStations());
+    Assert.assertEquals(1, CapacityHandler.getInstance().getNumberOfAssignedStations());
   }
 
   @Test
@@ -89,7 +89,7 @@ public class CapacityHandlerTest {
 
     Assert.assertEquals(11, CapacityHandler.getInstance().getAllowedUsers().size());
     Assert.assertEquals(0, CapacityHandler.getInstance().getUserQueue().size());
-    Assert.assertEquals(11, CapacityHandler.getInstance().getNumberOfAssingedStations());
+    Assert.assertEquals(11, CapacityHandler.getInstance().getNumberOfAssignedStations());
   }
 
   @Test
@@ -98,7 +98,7 @@ public class CapacityHandlerTest {
     CapacityHandler.getInstance().registerAppUser(user);
     Assert.assertTrue(CapacityHandler.getInstance().enterUser(user));
     Assert.assertEquals(1, CapacityHandler.getInstance().getUsersCurrentlyInOffice().size());
-    Assert.assertEquals(1, CapacityHandler.getInstance().getNumberOfAssingedStations());
+    Assert.assertEquals(1, CapacityHandler.getInstance().getNumberOfAssignedStations());
   }
 
   @Test
@@ -106,7 +106,7 @@ public class CapacityHandlerTest {
     Assert.assertTrue(CapacityHandler.getInstance().enterUser(new AppUser()));
     Assert.assertEquals(1, CapacityHandler.getInstance().getAllowedUsers().size());
     Assert.assertEquals(1, CapacityHandler.getInstance().getUsersCurrentlyInOffice().size());
-    Assert.assertEquals(1, CapacityHandler.getInstance().getNumberOfAssingedStations());
+    Assert.assertEquals(1, CapacityHandler.getInstance().getNumberOfAssignedStations());
   }
 
   @Test
@@ -118,7 +118,7 @@ public class CapacityHandlerTest {
     Assert.assertEquals(1, CapacityHandler.getInstance().getAllowedUsers().size());
     Assert.assertEquals(0, CapacityHandler.getInstance().getUsersCurrentlyInOffice().size());
     Assert.assertEquals(1, CapacityHandler.getInstance().getUserQueue().size());
-    Assert.assertEquals(1, CapacityHandler.getInstance().getNumberOfAssingedStations());
+    Assert.assertEquals(1, CapacityHandler.getInstance().getNumberOfAssignedStations());
   }
 
   @Test
@@ -128,7 +128,7 @@ public class CapacityHandlerTest {
         .enterUser(new AppUser(1L, "asd", "asd", "asd", "asd", "asd", UserRole.VIP)));
     Assert.assertEquals(1, CapacityHandler.getInstance().getAllowedUsers().size());
     Assert.assertEquals(2, CapacityHandler.getInstance().getUsersCurrentlyInOffice().size());
-    Assert.assertEquals(1, CapacityHandler.getInstance().getNumberOfAssingedStations());
+    Assert.assertEquals(1, CapacityHandler.getInstance().getNumberOfAssignedStations());
   }
 
   @Test
