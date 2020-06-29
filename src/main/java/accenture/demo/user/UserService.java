@@ -30,6 +30,6 @@ public interface UserService {
 
   AppUser deleteUser(Long id) throws NoSuchUserException;
 
-  List<AppUser> findUsers(String userFilter)
+  List<AppUserDTO> findUsers(String userFilter)
       throws UserFilterIsNotValidException;
 }

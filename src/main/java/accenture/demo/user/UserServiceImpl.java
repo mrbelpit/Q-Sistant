@@ -13,6 +13,7 @@ import accenture.demo.login.LoginRequestDTO;
 import accenture.demo.registration.RegistrationRequestDTO;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -157,7 +158,7 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public List<AppUser> findUsers(String userFilter) throws UserFilterIsNotValidException {
+  public List<AppUserDTO> findUsers(String userFilter) throws UserFilterIsNotValidException {
     UserFilter filter;
     try {
       filter = UserFilter.valueOf(userFilter.toUpperCase());
@@ -166,13 +167,13 @@ public class UserServiceImpl implements UserService {
     }
     switch (filter) {
       case ALL:
-        return (List<AppUser>) userRepository.findAll();
+        return castAppUsers((List<AppUser>) userRepository.findAll());
       case EMPLOYEE:
-        return userRepository.findByUserRole(UserRole.EMPLOYEE);
+        return castAppUsers(userRepository.findByUserRole(UserRole.EMPLOYEE));
       case ADMIN:
-        return userRepository.findByUserRole(UserRole.ADMIN);
+        return castAppUsers(userRepository.findByUserRole(UserRole.ADMIN));
       case VIP:
-        return userRepository.findByUserRole(UserRole.VIP);
+        return castAppUsers(userRepository.findByUserRole(UserRole.VIP));
       default:
         return null;
     }
@@ -190,5 +191,11 @@ public class UserServiceImpl implements UserService {
     String PASSWORD = System.getenv("FIRST_ADMIN_PASSWORD");
     createNewSpecialUser(
         new SpecialAppUserRegistrationDTO("admin", "admin", EMAIL, PASSWORD, "-1", UserRole.ADMIN));
+  }
+
+  private List<AppUserDTO> castAppUsers(List<AppUser> appUsers) {
+    return appUsers.stream()
+        .map(u -> modelMapper.map(u, AppUserDTO.class))
+        .collect(Collectors.toList());
   }
 }
