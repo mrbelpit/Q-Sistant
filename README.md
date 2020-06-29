@@ -135,3 +135,10 @@ Users that have gained access to enter the office get an assigned workstation. T
 - [See here](#hrdepartment)
 
 ## For all endpoints see [swagger](http://qsistant-env-1.eba-5xbc6q7e.eu-west-3.elasticbeanstalk.com/swagger-ui.html)
+
+Created for Accenture Java competition
+
+Created by:
+- [Marcell Szukács](https://github.com/spiglebach)
+- [Gergely Szukács](https://github.com/szukacs)
+- [Dávid Nagy](https://github.com/mrbelpit)
