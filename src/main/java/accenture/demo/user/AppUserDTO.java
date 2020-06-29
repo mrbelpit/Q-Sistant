@@ -13,9 +13,11 @@ import lombok.Setter;
 @EqualsAndHashCode
 public class AppUserDTO {
 
+  private Long id;
   private String firstName;
   private String lastName;
   private String email;
   private String cardId;
   private UserRole userRole;
+
 }

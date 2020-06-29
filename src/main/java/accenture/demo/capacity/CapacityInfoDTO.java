@@ -1,12 +1,13 @@
 package accenture.demo.capacity;
 
-import accenture.demo.user.AppUser;
-import java.util.ArrayList;
+import accenture.demo.user.AppUserDTO;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -20,5 +21,5 @@ public class CapacityInfoDTO {
   private Integer maxWorkerAllowedToEnter;
   private Integer workersCurrentlyInOffice;
   private Integer freeSpace;
-  private ArrayList<AppUser> employeesInTheBuilding;
+  private List<AppUserDTO> employeesInTheBuilding;
 }

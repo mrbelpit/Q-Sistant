@@ -170,7 +170,7 @@ public class CapacityHandler {
         return userQueue;
     }
 
-    public int getNumberOfAssingedStations() {
+    public int getNumberOfAssignedStations() {
         return assignedStations.size();
     }
 
