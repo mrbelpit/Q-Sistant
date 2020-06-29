@@ -50,7 +50,8 @@ public class ImageProcessor {
     private void loadNoWorkStationImage() {
         noWorkStationImage = new byte[3];
         try {
-            File noWorkStationSpecifiedImageFile = new File("src/main/resources/youshallnotpass.jpg");
+            String pictureFilePath = System.getenv("ACCESS_DENIED_PICTURE_FILEPATH");
+            File noWorkStationSpecifiedImageFile = new File(pictureFilePath);
             BufferedImage noWorkStationBufferedImage = ImageIO.read(noWorkStationSpecifiedImageFile);
             ByteArrayOutputStream bao = new ByteArrayOutputStream();
             ImageIO.write(noWorkStationBufferedImage, "jpg", bao);

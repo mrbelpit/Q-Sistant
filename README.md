@@ -9,9 +9,11 @@
 - TOKEN_HEADER_STRING                       `Authorization`
 - JWT_TOKEN_EXPIRATION_TIME                 `3600000`
 - KAFKA_SERVER_URI                          `127.0.0.1:9092 (default kafka address with default port)`
-- FIRST_ADMIN_EMAIL                         `(any e-mail)`
-- FIRST_ADMIN_PASSWORD                      `(any password)`
+- FIRST_ADMIN_EMAIL                         `(any e-mail, hosted  version uses "bob")`
+- FIRST_ADMIN_PASSWORD                      `(any password, hosted  version uses "bob@bob.com")`
 - OFFICE_IMAGE_URL                          `https://github.com/mrbelpit/Q-Sistant/blob/master/layout/accenture_layout.jpg?raw=true`
+- ACCESS_DENIED_PICTURE_FILEPATH                      `(any picture you like)`
+
 
 ## Image processing for workstation distribution:
 ### Input image:
