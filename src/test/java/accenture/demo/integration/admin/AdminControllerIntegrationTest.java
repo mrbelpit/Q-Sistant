@@ -77,6 +77,7 @@ public class AdminControllerIntegrationTest {
         .webAppContextSetup(context)
         .apply(springSecurity())
         .build();
+
     String EMAIL = System.getenv("FIRST_ADMIN_EMAIL");
     String PASSWORD = System.getenv("FIRST_ADMIN_PASSWORD");
     tokenFirstAdmin = registerLoginAndGetUsersToken(EMAIL, PASSWORD);
@@ -197,7 +198,6 @@ public class AdminControllerIntegrationTest {
     String msg = result.getResponse().getContentAsString();
     Assert.assertEquals("User filter is not valid!", msg);
   }
-
 
   @Test
   public void adminCalibrate_expectOK_assertsEqual() throws Exception {
