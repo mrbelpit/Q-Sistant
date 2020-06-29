@@ -15,7 +15,9 @@ import accenture.demo.capacity.CapacityService;
 import accenture.demo.capacity.Message;
 import accenture.demo.configuration.AppTestConfig;
 import accenture.demo.exception.entry.EntryDeniedException;
+import accenture.demo.kafka.KafkaMessageService;
 import accenture.demo.user.AppUser;
+import accenture.demo.user.UserRole;
 import accenture.demo.user.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
@@ -32,9 +34,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+@RunWith(SpringRunner.class)
 @Import(AppTestConfig.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-@RunWith(SpringRunner.class)
 public class CapacityControllerUnitTest {
 
   private MockMvc mockMvc;
@@ -51,16 +53,19 @@ public class CapacityControllerUnitTest {
   @MockBean
   private UserService userService;
 
+  @MockBean
+  private KafkaMessageService kafkaMessageService;
+
   private AppUser testAppUser;
 
   @Before
   public void setup() {
     this.mockMvc = MockMvcBuilders.standaloneSetup(
-        new CapacityController(capacityService, userService))
+        new CapacityController(capacityService, userService, kafkaMessageService))
         .setControllerAdvice(new CapacityExceptionHandler())
         .build();
     testAppUser = new AppUser(1L, "Lajos", "The Mighty", "lajos@themightiest.com", "pw",
-        "1");
+        "1", UserRole.EMPLOYEE);
   }
 
   @Test
@@ -77,6 +82,17 @@ public class CapacityControllerUnitTest {
     Message responseMessage = objectMapper
         .readValue(result.getResponse().getContentAsString(), Message.class);
     assertEquals(responseMessage.getMessage(), message.getMessage());
+  }
+
+  @Test
+  @WithMockUser
+  public void getAssignedStationImage_withStationAssigned_assertEquals() throws Exception {
+    when(capacityService.getAssignedStationImage(any())).thenReturn(new byte[2400]);
+    MvcResult result = mockMvc.perform(get("/office/station")
+        .contentType(contentType)
+        .contentType(objectMapper.writeValueAsString(testAppUser)))
+        .andReturn();
+    assertEquals(MediaType.IMAGE_JPEG_VALUE, result.getResponse().getContentType());
   }
 
   @Test

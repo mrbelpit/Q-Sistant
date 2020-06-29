@@ -1,17 +1,19 @@
 package accenture.demo.user;
 
+import accenture.demo.admin.SpecialAppUserRegistrationDTO;
+import accenture.demo.login.LoginRequestDTO;
+import accenture.demo.registration.RegistrationRequestDTO;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-import accenture.demo.login.LoginRequestDTO;
+import accenture.demo.security.CurrentSecurityUser;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.annotation.Transient;
 
 @Entity
 @Getter
@@ -28,11 +30,32 @@ public class AppUser {
   private String lastName;
   private String email;
   private String password;
-  public String cardId;
+  private String cardId;
+  private UserRole userRole;
 
-  public AppUser(LoginRequestDTO loginRequestDTO){
+  public AppUser(LoginRequestDTO loginRequestDTO) {
     this.email = loginRequestDTO.getEmail();
     this.password = loginRequestDTO.getPassword();
   }
 
+  public AppUser(RegistrationRequestDTO registrationRequestDTO, UserRole userRole) {
+    this.firstName = registrationRequestDTO.getFirstName();
+    this.lastName = registrationRequestDTO.getLastName();
+    this.email = registrationRequestDTO.getEmail();
+    this.password = registrationRequestDTO.getPassword();
+    this.cardId = registrationRequestDTO.getCardId();
+    this.userRole = userRole;
+  }
+  public AppUser(SpecialAppUserRegistrationDTO specRegRequestDTO) {
+    this.firstName = specRegRequestDTO.getFirstName();
+    this.lastName = specRegRequestDTO.getLastName();
+    this.email = specRegRequestDTO.getEmail();
+    this.password = specRegRequestDTO.getPassword();
+    this.cardId = specRegRequestDTO.getCardId();
+    this.userRole = specRegRequestDTO.getUserRole();
+  }
+
+  public CurrentSecurityUser toCurrentUserDetails() {
+    return CurrentSecurityUser.create(this);
+  }
 }

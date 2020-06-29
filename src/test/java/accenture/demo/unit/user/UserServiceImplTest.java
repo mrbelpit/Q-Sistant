@@ -14,6 +14,7 @@ import accenture.demo.login.LoginRequestDTO;
 import accenture.demo.registration.RegistrationRequestDTO;
 import accenture.demo.user.AppUser;
 import accenture.demo.user.UserRepository;
+import accenture.demo.user.UserRole;
 import accenture.demo.user.UserService;
 import accenture.demo.user.UserServiceImpl;
 import java.util.Optional;
@@ -42,7 +43,7 @@ public class UserServiceImplTest {
     this.userService = new UserServiceImpl(userRepository, modelMapper);
   }
 
-  private AppUser testAppUser = new AppUser(1L, "John", "Doe", "jd@email.com", "pw", "1");
+  private AppUser testAppUser = new AppUser(1L, "John", "Doe", "jd@email.com", "pw", "1", UserRole.EMPLOYEE);
 
   private RegistrationRequestDTO regRequestDTO =
       new RegistrationRequestDTO("John", "Doe", "jd@email.com",
@@ -78,7 +79,7 @@ public class UserServiceImplTest {
   public void login_success() throws LoginException, RequestBodyIsNullException {
     when(userRepository.findByEmail(any())).thenReturn(Optional.ofNullable(testAppUser));
     when(modelMapper.map(any(), any()))
-        .thenReturn(new AppUser(null, null, null, "jd@email.com", "pw", null));
+        .thenReturn(new AppUser(null, null, null, "jd@email.com", "pw", null, UserRole.EMPLOYEE));
     userService.validateLoginCredentials(new LoginRequestDTO("jd@email.com", "pw"));
   }
 
@@ -103,10 +104,10 @@ public class UserServiceImplTest {
   @Test
   public void validateLoginCredentials_InvalidPassword()
       throws LoginException, RequestBodyIsNullException {
-    AppUser storedUser = new AppUser(1L, "John", "Doe", "jd@email.com", "pw", "1");
+    AppUser storedUser = new AppUser(1L, "John", "Doe", "jd@email.com", "pw", "1", UserRole.EMPLOYEE);
     when(userRepository.findByEmail(any())).thenReturn(Optional.ofNullable(storedUser));
     when(modelMapper.map(any(), any()))
-        .thenReturn(new AppUser(null, null, null, "jd@email.com", "invalid", null));
+        .thenReturn(new AppUser(null, null, null, "jd@email.com", "invalid", null, UserRole.EMPLOYEE));
     thrown.expect(WrongPasswordException.class);
     thrown.expectMessage("Wrong password!");
     userService.validateLoginCredentials(new LoginRequestDTO("jd@email.com", "invalid"));

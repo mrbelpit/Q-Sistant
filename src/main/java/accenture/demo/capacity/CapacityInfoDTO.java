@@ -20,5 +20,5 @@ public class CapacityInfoDTO {
   private Integer maxWorkerAllowedToEnter;
   private Integer workersCurrentlyInOffice;
   private Integer freeSpace;
-  private ArrayList<AppUser> workersInTheBuilding;
+  private ArrayList<AppUser> employeesInTheBuilding;
 }

@@ -25,19 +25,20 @@ public class CapacityExceptionHandler {
 
   @ExceptionHandler(value = InvalidCapacitySetupModifierException.class)
   public ResponseEntity<?> handleInvalidCapacitySetupModifierException(
-      InvalidCapacitySetupModifierException exception) {
+          InvalidCapacitySetupModifierException exception) {
     return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
   }
 
   @ExceptionHandler(value = InvalidCapacitySetupValueException.class)
   public ResponseEntity<?> handleInvalidCapacitySetupValueException(
-      InvalidCapacitySetupValueException exception) {
+          InvalidCapacitySetupValueException exception) {
     return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
   }
 
   @ExceptionHandler(value = CardIdNotExistException.class)
   public ResponseEntity<?> handleCardIdNotExistException(
-      CardIdNotExistException exception) {
+          CardIdNotExistException exception) {
     return new ResponseEntity<>(exception.getMessage(), HttpStatus.OK);
   }
+
 }

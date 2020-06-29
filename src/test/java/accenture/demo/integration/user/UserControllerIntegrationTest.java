@@ -1,4 +1,4 @@
-package accenture.demo.integration.capacity;
+package accenture.demo.integration.user;
 
 import accenture.demo.configuration.AppTestConfig;
 import accenture.demo.login.LoginRequestDTO;
@@ -64,7 +64,7 @@ public class UserControllerIntegrationTest {
                 .andReturn();
         RegistrationResponseDTO resultDTO = objectMapper
                 .readValue(result.getResponse().getContentAsString(), RegistrationResponseDTO.class);
-        assertEquals(Long.valueOf(1L), resultDTO.getId());
+        assertEquals(Long.valueOf(2L), resultDTO.getId());
         assertEquals("johnbambo@jungle.man", resultDTO.getEmail());
     }
 
@@ -120,5 +120,4 @@ public class UserControllerIntegrationTest {
                         objectMapper.writeValueAsString(request)))
                 .andExpect(status().isUnauthorized());
     }
-
 }

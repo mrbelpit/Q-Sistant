@@ -19,4 +19,5 @@ public class RegistrationResponseDTO {
   private String email;
   private String status;
   private String message;
+  private String cardId;
 }

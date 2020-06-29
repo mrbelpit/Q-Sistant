@@ -1,5 +1,6 @@
 package accenture.demo.capacity;
 
+import accenture.demo.exception.QueueNotificationNumberNotValidException;
 import accenture.demo.exception.appuser.CardIdNotExistException;
 import accenture.demo.exception.capacity.CapacitySetupException;
 import accenture.demo.exception.capacity.InvalidCapacitySetupModifierException;
@@ -9,6 +10,7 @@ import accenture.demo.user.AppUser;
 import accenture.demo.user.UserService;
 import java.util.Queue;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -87,7 +89,8 @@ public class CapacityServiceImpl implements CapacityService {
   @Override
   public CapacityInfoDTO generalInfo() {
     CapacityHandler capacityHandler = CapacityHandler.getInstance();
-    Integer maxWorkerAllowedToEnter = (int) (capacityHandler.getMaxWorkplaceSpace() * capacityHandler.getWorkspaceCapacity());
+    Integer maxWorkerAllowedToEnter = (int) (capacityHandler.getMaxWorkplaceSpace()
+        * capacityHandler.getWorkspaceCapacity());
     return new CapacityInfoDTO(
         capacityHandler.getMaxWorkplaceSpace(),
         percentageChanger(),
@@ -131,8 +134,43 @@ public class CapacityServiceImpl implements CapacityService {
   }
 
   private void checkCardId(AppUser user) throws CardIdNotExistException {
-    if (user == null){
+    if (user == null) {
       throw new CardIdNotExistException("The provided card ID is not valid!");
+    }
+  }
+
+  @Override
+  public AppUser getNthUserInQueue(int n) {
+    return CapacityHandler.getInstance().getNthUserInQueue(n);
+  }
+
+  public byte[] currentLayout() {
+    return CapacityHandler.getInstance().getCurrentLayoutImage();
+  }
+
+  public byte[] getAssignedStationImage(AppUser user) {
+    return CapacityHandler.getInstance().getAssignedStationImage(user);
+  }
+
+  @Scheduled(cron = "0 0 0 * * ?")
+  public void restartDay() {
+    CapacityHandler.getInstance().restartDay();
+  }
+
+  @Override
+  public Message setNumberToSendNotification(QueueNotificationSetupDTO queueNotificationSetupDTO)
+      throws QueueNotificationNumberNotValidException {
+    checkQueueNotificationNumber(queueNotificationSetupDTO);
+    CapacityHandler.getInstance().setQueuePlaceToSendNotificationTo(
+        queueNotificationSetupDTO.getQueueSetupNotificationNumber());
+    return new Message("Notification number successfully set to " + CapacityHandler.getInstance()
+        .getQueuePlaceToSendNotificationTo() + "!");
+  }
+
+  private void checkQueueNotificationNumber(QueueNotificationSetupDTO queueNotificationSetupDTO)
+      throws QueueNotificationNumberNotValidException {
+    if (queueNotificationSetupDTO.getQueueSetupNotificationNumber()<1){
+      throw new QueueNotificationNumberNotValidException("The provided number must be higher than 0!");
     }
   }
 }
