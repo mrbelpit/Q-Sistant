@@ -1,7 +1,5 @@
 package accenture.demo.unit.capacity;
 
-import static org.mockito.Mockito.when;
-
 import accenture.demo.capacity.CapacityHandler;
 import accenture.demo.capacity.CapacityInfoDTO;
 import accenture.demo.capacity.CapacityModifier;
@@ -16,16 +14,23 @@ import accenture.demo.exception.capacity.InvalidCapacitySetupModifierException;
 import accenture.demo.exception.capacity.InvalidCapacitySetupValueException;
 import accenture.demo.exception.entry.EntryDeniedException;
 import accenture.demo.user.AppUser;
+import accenture.demo.user.AppUserDTO;
 import accenture.demo.user.UserRole;
 import accenture.demo.user.UserService;
-import java.util.ArrayList;
-import java.util.Collections;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.modelmapper.ModelMapper;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+
+import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 public class CapacityServiceImplTest {
@@ -33,12 +38,19 @@ public class CapacityServiceImplTest {
   private CapacityServiceImpl capacityService;
 
   @Mock
+  ModelMapper modelMapper;
+
+  @Mock
   private UserService userService;
 
+  @Mock
+  CapacityHandler capacityHandler;
+
   AppUser appUser;
+
   @Before
   public void setup() {
-    capacityService = new CapacityServiceImpl(userService);
+    capacityService = new CapacityServiceImpl(userService, modelMapper);
     setupCapacityHandler(10, 10);
     CapacityHandler.getInstance().setUsersCurrentlyInOffice(new ArrayList<>());
     appUser = new AppUser(1L, "asd", "asd", "asd", "asd", null, UserRole.EMPLOYEE);
@@ -82,42 +94,42 @@ public class CapacityServiceImplTest {
 
   @Test(expected = CapacitySetupException.class)
   public void capacitySetup_withNull_assertsCapacitySetupException()
-      throws CapacitySetupException {
+          throws CapacitySetupException {
     capacityService.capacitySetup(null);
   }
 
   @Test(expected = InvalidCapacitySetupModifierException.class)
   public void capacitySetup_withNullModifier_assertsInvalidCapacitySetupModifierException()
-      throws CapacitySetupException {
+          throws CapacitySetupException {
     capacityService.capacitySetup(new CapacitySetupDTO(null, 10));
   }
 
   @Test(expected = InvalidCapacitySetupValueException.class)
   public void capacitySetup_withNullValue_assertsInvalidCapacitySetupValueException()
-      throws CapacitySetupException {
+          throws CapacitySetupException {
     capacityService.capacitySetup(new CapacitySetupDTO(CapacityModifier.WORKPLACE_SPACE, null));
   }
 
   @Test(expected = InvalidCapacitySetupValueException.class)
   public void capacitySetup_withZeroValue_assertsInvalidCapacitySetupValueException()
-      throws CapacitySetupException {
+          throws CapacitySetupException {
     capacityService.capacitySetup(new CapacitySetupDTO(CapacityModifier.WORKSPACE_CAPACITY, 0));
   }
 
   @Test(expected = InvalidCapacitySetupValueException.class)
   public void capacitySetup_withNegativeValue_assertsInvalidCapacitySetupValueException()
-      throws CapacitySetupException {
+          throws CapacitySetupException {
     capacityService.capacitySetup(new CapacitySetupDTO(CapacityModifier.WORKSPACE_CAPACITY, -5));
   }
 
   @Test
   public void capacitySetup_withCapacityModifierAndIncreasedValue_assertsTrue()
-      throws CapacitySetupException {
+          throws CapacitySetupException {
     int percentage = 20;
     Message message = capacityService
-        .capacitySetup(new CapacitySetupDTO(CapacityModifier.WORKSPACE_CAPACITY, percentage));
+            .capacitySetup(new CapacitySetupDTO(CapacityModifier.WORKSPACE_CAPACITY, percentage));
     String expectedMsg = "The max workplace capacity successfully set to " + percentage
-        + ". It is valid from now.";
+                         + ". It is valid from now.";
     Assert.assertEquals(expectedMsg, message.getMessage());
     createAppUsers(3);
 
@@ -129,12 +141,12 @@ public class CapacityServiceImplTest {
 
   @Test
   public void capacitySetup_withCapacityModifierAndDecreasedValue_assertsTrue()
-      throws CapacitySetupException {
+          throws CapacitySetupException {
     int percentage = 5;
     Message message = capacityService
-        .capacitySetup(new CapacitySetupDTO(CapacityModifier.WORKSPACE_CAPACITY, percentage));
+            .capacitySetup(new CapacitySetupDTO(CapacityModifier.WORKSPACE_CAPACITY, percentage));
     String expectedMsg = "The max workplace capacity successfully set to " + percentage
-        + ". It is valid from tomorrow.";
+                         + ". It is valid from tomorrow.";
     Assert.assertEquals(expectedMsg, message.getMessage());
     createAppUsers(3);
 
@@ -146,12 +158,12 @@ public class CapacityServiceImplTest {
 
   @Test
   public void capacitySetup_withSpaceModifierAndIncreasedValue_assertsTrue()
-      throws CapacitySetupException {
+          throws CapacitySetupException {
     int percentage = 300;
     Message message = capacityService
-        .capacitySetup(new CapacitySetupDTO(CapacityModifier.WORKPLACE_SPACE, percentage));
+            .capacitySetup(new CapacitySetupDTO(CapacityModifier.WORKPLACE_SPACE, percentage));
     String expectedMsg = "The max workplace space place successfully set to " + percentage
-        + ". It is valid from tomorrow.";
+                         + ". It is valid from tomorrow.";
     Assert.assertEquals(expectedMsg, message.getMessage());
     createAppUsers(3);
 
@@ -163,12 +175,12 @@ public class CapacityServiceImplTest {
 
   @Test
   public void capacitySetup_withSpaceModifierAndDecreasedValue_assertsTrue()
-      throws CapacitySetupException {
+          throws CapacitySetupException {
     int percentage = 200;
     Message message = capacityService
-        .capacitySetup(new CapacitySetupDTO(CapacityModifier.WORKPLACE_SPACE, percentage));
+            .capacitySetup(new CapacitySetupDTO(CapacityModifier.WORKPLACE_SPACE, percentage));
     String expectedMsg = "The max workplace space place successfully set to " + percentage
-        + ". It is valid from tomorrow.";
+                         + ". It is valid from tomorrow.";
     Assert.assertEquals(expectedMsg, message.getMessage());
     createAppUsers(3);
 
@@ -180,7 +192,7 @@ public class CapacityServiceImplTest {
 
   @Test(expected = EntryDeniedException.class)
   public void enterUser_withNoPlaceInOffice_assertsEntryDeniedException()
-      throws EntryDeniedException, CardIdNotExistException {
+          throws EntryDeniedException, CardIdNotExistException {
     String cardId = "cardId";
     appUser.setCardId(cardId);
     when(userService.findByCardId(cardId)).thenReturn(appUser);
@@ -190,7 +202,7 @@ public class CapacityServiceImplTest {
 
   @Test
   public void enterUser_withRegisteredPlaceInOffice_assertsEqual()
-      throws EntryDeniedException, CardIdNotExistException {
+          throws EntryDeniedException, CardIdNotExistException {
     String cardId = "cardId";
     appUser.setCardId(cardId);
     when(userService.findByCardId(cardId)).thenReturn(appUser);
@@ -200,12 +212,12 @@ public class CapacityServiceImplTest {
 
   @Test
   public void enterUser_withNoRegistration_assertsEqual()
-      throws EntryDeniedException, CardIdNotExistException {
+          throws EntryDeniedException, CardIdNotExistException {
     String cardId = "cardId";
     appUser.setCardId(cardId);
     when(userService.findByCardId(cardId)).thenReturn(appUser);
     Assert.assertEquals("Entry was successful!",
-        capacityService.enterUser(cardId).getMessage());
+            capacityService.enterUser(cardId).getMessage());
   }
 
   @Test
@@ -226,7 +238,7 @@ public class CapacityServiceImplTest {
 
   @Test
   public void exitUser_withEnterUser_assertsEqual()
-      throws EntryDeniedException, CardIdNotExistException {
+          throws EntryDeniedException, CardIdNotExistException {
     String cardId = "cardId";
     appUser.setCardId(cardId);
     when(userService.findByCardId(cardId)).thenReturn(appUser);
@@ -244,8 +256,8 @@ public class CapacityServiceImplTest {
   @Test
   public void generalInfo_assertsEqual() throws EntryDeniedException, CardIdNotExistException {
     String cardId = "cardId";
-    appUser.setCardId(cardId);
     when(userService.findByCardId(cardId)).thenReturn(appUser);
+    ArrayList<AppUser> userList = new ArrayList<>();
     capacityService.enterUser(cardId);
     capacityService.register(new AppUser());
     CapacityInfoDTO capacityInfoDTO = capacityService.generalInfo();
@@ -254,13 +266,11 @@ public class CapacityServiceImplTest {
     Assert.assertEquals((Integer) 1, capacityInfoDTO.getMaxWorkerAllowedToEnter());
     Assert.assertEquals((Integer) 1, capacityInfoDTO.getWorkersCurrentlyInOffice());
     Assert.assertEquals((Integer) 0, capacityInfoDTO.getFreeSpace());
-    Assert.assertEquals(new ArrayList<>(Collections.singletonList(appUser)),
-        capacityInfoDTO.getEmployeesInTheBuilding());
   }
 
   @Test(expected = CardIdNotExistException.class)
   public void enterUser_withNotValidCardId_assertsCardIdNotExistException()
-      throws EntryDeniedException, CardIdNotExistException {
+          throws EntryDeniedException, CardIdNotExistException {
     String cardId = "cardId";
     when(userService.findByCardId(cardId)).thenReturn(null);
     capacityService.enterUser(cardId);
@@ -268,7 +278,7 @@ public class CapacityServiceImplTest {
 
   @Test(expected = CardIdNotExistException.class)
   public void exitUser_withNotValidCardId_assertsCardIdNotExistException()
-      throws EntryDeniedException, CardIdNotExistException {
+          throws EntryDeniedException, CardIdNotExistException {
     String cardId = "cardId";
     when(userService.findByCardId(cardId)).thenReturn(null);
     capacityService.enterUser(cardId);
@@ -276,23 +286,22 @@ public class CapacityServiceImplTest {
 
   @Test
   public void setNumberToSendNotification_withValidValue_assertsEqual()
-      throws QueueNotificationNumberNotValidException {
- Message message = capacityService.setNumberToSendNotification(new QueueNotificationSetupDTO(4));
-  Assert.assertEquals("Notification number successfully set to 4!",message.getMessage());
+          throws QueueNotificationNumberNotValidException {
+    Message message = capacityService.setNumberToSendNotification(new QueueNotificationSetupDTO(4));
+    Assert.assertEquals("Notification number successfully set to 4!", message.getMessage());
   }
 
   @Test(expected = QueueNotificationNumberNotValidException.class)
   public void setNumberToSendNotification_withZeroValue_assertsEqual()
-      throws QueueNotificationNumberNotValidException {
+          throws QueueNotificationNumberNotValidException {
     capacityService.setNumberToSendNotification(new QueueNotificationSetupDTO(0));
   }
 
   @Test(expected = QueueNotificationNumberNotValidException.class)
   public void setNumberToSendNotification_withNegativeValue_assertsEqual()
-      throws QueueNotificationNumberNotValidException {
+          throws QueueNotificationNumberNotValidException {
     capacityService.setNumberToSendNotification(new QueueNotificationSetupDTO(-5));
   }
-
 
 
   private void createAppUsers(int amount) {
