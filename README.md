@@ -130,3 +130,5 @@ Users that have gained access to enter the office get an assigned workstation. T
    
 #### Provide picture with the office's workstations with different status ( GET `/admin/layout` endpoint):
 - [See here](#hrdepartment)
+
+## For all endpoints see [swagger](http://qsistant-env-1.eba-5xbc6q7e.eu-west-3.elasticbeanstalk.com/swagger-ui.html)
