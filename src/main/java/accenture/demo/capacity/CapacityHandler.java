@@ -26,7 +26,6 @@ public class CapacityHandler {
     private List<WorkStation> stations;
     private Map<AppUser, WorkStation> assignedStations = new HashMap<>();
     private ImageProcessor imageProcessor;
-    private static final String OFFICE_IMAGE_URL = "https://github.com/mrbelpit/Q-Sistant/blob/master/layout/accenture_layout.jpg?raw=true";
 
     private CapacityHandler() {
         restartDay();
@@ -92,7 +91,8 @@ public class CapacityHandler {
     public void restartDay() {
         allowedUsers = new LinkedBlockingQueue<>((int) (maxWorkplaceSpace * workspaceCapacity));
         userQueue = new LinkedList<>();
-        imageProcessor = new ImageProcessor(OFFICE_IMAGE_URL);
+        assignedStations = new HashMap<>();
+        imageProcessor = new ImageProcessor(System.getenv("OFFICE_IMAGE_URL"));
         stations = imageProcessor.processStations();
         setNearbyStations();
     }
