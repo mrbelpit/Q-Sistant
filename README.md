@@ -32,9 +32,10 @@ The HR department (admins) has the ability to query the current status of the of
   - **FREE (green)** if it has not been RESERVED, OCCUPIED and is not UNAVAILABLE  
 ![Example generated office layout image](https://github.com/mrbelpit/Q-Sistant/blob/master/layout/adminlayout.jpg?raw=true)
 #### Employee's assigned workstation displayed on the office layout:  
-Users that have gained access to enter the office get an assigned workstation. They can view the position of their workstation by accessing the **/office/station** endpoint. The accessing user's workstation is designated by a relatively big red rectangle.
+Users that have gained access to enter the office get an assigned workstation. They can view the position of their workstation by accessing the **/office/station** endpoint. The accessing user's workstation is designated by a **relatively big red rectangle**.
 ![A user's assigned workstation](https://github.com/mrbelpit/Q-Sistant/blob/master/layout/officestation.jpg?raw=true)
-
+### The process of workstation distribution:
+**Every day at midnight**, the application **processes the office layout image** specified by the OFFICE_IMAGE_URL environment variable. This means that it **generates a list of workstations** and for each individual station it **stores the stations that are closer than the specified minimum distance** between distributed workstations. After this, when a user reserves a workstation, other workstations that are too close become unavailable. At every distribution (either straight away or from a queue) the application selects a workstation from the list that **has the least free neighbors**. This means that **if workstation A is free and has one free and one unavailable neighbor** and **workstation B is also free but has more than one free neighbors**, **A will be distributed instead of B**. If there are no free workstations, the user will be placed in the queue.
 ## Admin Controller
 - This endpoints available only users with role admin.
 
