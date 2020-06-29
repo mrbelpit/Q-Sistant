@@ -40,4 +40,5 @@ public class CapacityExceptionHandler {
           CardIdNotExistException exception) {
     return new ResponseEntity<>(exception.getMessage(), HttpStatus.OK);
   }
+
 }

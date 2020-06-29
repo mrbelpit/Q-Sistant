@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class AdminExceptionHandler {
 
-
   @ExceptionHandler(value = UserFilterIsNotValidException.class)
   public ResponseEntity<?> handleUserFilterIsNotValidException(
       UserFilterIsNotValidException exception) {
@@ -30,7 +29,6 @@ public class AdminExceptionHandler {
       ValueIsNotValidException exception) {
     return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
   }
-
 
   @ExceptionHandler(value = QueueNotificationNumberNotValidException.class)
   public ResponseEntity<?> handleQueueNotificationNumberNotValidException(

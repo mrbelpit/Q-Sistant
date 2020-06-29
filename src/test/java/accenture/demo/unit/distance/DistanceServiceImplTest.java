@@ -18,8 +18,14 @@ public class DistanceServiceImplTest {
   private DistanceServiceImpl distanceService;
 
   @Before
-  public void setup() {
+  public void setup() throws DistanceException {
     distanceService = new DistanceServiceImpl();
+    distanceService.setDistance(new DistanceSetupDTO(Unit.METER, 5));
+  }
+
+  @Test
+  public void getDistanceInPixel_withDefaultValue_assertsEqual() {
+    Assert.assertEquals(Integer.valueOf(50), distanceService.getDistanceInPixel());
   }
 
   @Test
@@ -44,11 +50,6 @@ public class DistanceServiceImplTest {
   @Test(expected = ValueIsNotValidException.class)
   public void setDistance_withBigValue() throws DistanceException {
     distanceService.setDistance(new DistanceSetupDTO(Unit.METER, 100));
-  }
-
-  @Test
-  public void getDistanceInPixel_withDefaultValue_assertsEqual() {
-    Assert.assertEquals(Integer.valueOf(50), distanceService.getDistanceInPixel());
   }
 
   @Test
