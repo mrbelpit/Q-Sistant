@@ -60,7 +60,7 @@ public class CapacityController {
   @DeleteMapping("/exit/{cardId}")
   public ResponseEntity<?> exitUser(@PathVariable String cardId) throws CardIdNotExistException {
     int nThPlaceInQueue = CapacityHandler.getInstance().getQueuePlaceToSendNotificationTo();
-    kafkaMessageService.sendMessageToUserByPlaceInQueue(nThPlaceInQueue);
+    //kafkaMessageService.sendMessageToUserByPlaceInQueue(nThPlaceInQueue);
     return new ResponseEntity<>(capacityService.exitUser(cardId), HttpStatus.OK);
   }
 
